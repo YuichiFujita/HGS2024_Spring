@@ -64,7 +64,7 @@ HRESULT CSceneResult::Init(void)
 	//--------------------------------------------------------
 	// カメラを設定
 	GET_MANAGER->GetCamera()->SetState(CCamera::STATE_ROTATE);	// カメラを回転状態に設定
-	GET_MANAGER->GetCamera()->SetDestRotate();	// 目標位置を設定
+	GET_MANAGER->GetCamera()->SetDestRotate();					// 目標位置を設定
 
 	// BGMの再生
 	PLAY_SOUND(CSound::LABEL_BGM_GENERAL);

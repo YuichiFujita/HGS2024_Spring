@@ -68,7 +68,7 @@ HRESULT CSceneTutorial::Init(void)
 	//	初期設定
 	//--------------------------------------------------------
 	// BGMの再生
-	PLAY_SOUND(CSound::LABEL_BGM_TUTORIAL);
+	GET_MANAGER->GetSound()->Play(CSound::LABEL_BGM_GENERAL);
 
 	// 成功を返す
 	return S_OK;
@@ -115,6 +115,6 @@ CTutorialManager *CSceneTutorial::GetTutorialManager(void)
 	// インスタンス未使用
 	assert(m_pTutorialManager != nullptr);
 
-	// チュートリアルマネージャーのポインタを返す
+	// チュートリアルマネージャーを返す
 	return m_pTutorialManager;
 }
