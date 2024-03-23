@@ -317,9 +317,6 @@
     <ClCompile Include="source\manager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\map.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\model.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>

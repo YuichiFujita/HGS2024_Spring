@@ -9,8 +9,6 @@
 //************************************************************
 #include "shader.h"
 #include "shaderToon.h"
-#include "shaderMono.h"
-#include "shaderDrawBoss.h"
 #include "manager.h"
 #include "renderer.h"
 
@@ -239,26 +237,6 @@ HRESULT CShader::Create(void)
 		return E_FAIL;
 	}
 
-	// 単色描画シェーダーの生成
-	CMonoShader *pMonoShader = CMonoShader::Create();
-	if (pMonoShader == nullptr)
-	{ // 生成に失敗した場合
-
-		// 失敗を返す
-		assert(false);
-		return E_FAIL;
-	}
-
-	// ボス描画シェーダーの生成
-	CDrawBossShader *pDrawBossShader = CDrawBossShader::Create();
-	if (pDrawBossShader == nullptr)
-	{ // 生成に失敗した場合
-
-		// 失敗を返す
-		assert(false);
-		return E_FAIL;
-	}
-
 	// 成功を返す
 	return S_OK;
 }
@@ -270,12 +248,6 @@ void CShader::Release(void)
 {
 	// トゥーンシェーダーの破棄
 	CToonShader::Release();
-
-	// 単色描画シェーダーの破棄
-	CMonoShader::Release();
-
-	// ボス描画シェーダーの破棄
-	CDrawBossShader::Release();
 }
 
 //============================================================

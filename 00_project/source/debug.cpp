@@ -241,9 +241,6 @@ void CDebug::UpdateDebugControl(void)
 		// ポーズ表示変更
 		ChangeDispPause();
 
-		// 判定表示変更
-		ChangeDispColl();
-
 		break;
 
 	case CScene::MODE_RESULT:

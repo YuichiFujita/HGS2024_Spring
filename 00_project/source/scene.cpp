@@ -52,13 +52,6 @@ HRESULT CScene::Init(void)
 {
 	// ステージの生成
 	m_pStage = CStage::Create(m_mode);
-	if (m_pStage == nullptr)
-	{ // 非使用中の場合
-
-		// 失敗を返す
-		assert(false);
-		return E_FAIL;
-	}
 
 	// プレイヤーの生成
 	CPlayer::Create(m_mode);
@@ -87,9 +80,12 @@ void CScene::Update(void)
 	CCamera		*pCamera	= pManager->GetCamera();	// カメラ
 	CRenderer	*pRenderer	= pManager->GetRenderer();	// レンダラー
 
-	// ステージの更新
-	assert(m_pStage != nullptr);
-	m_pStage->Update();
+	if (m_pStage != nullptr)
+	{ // ステージがある場合
+
+		// ステージの更新
+		m_pStage->Update();
+	}
 
 	// ライトの更新
 	assert(pLight != nullptr);

@@ -338,8 +338,27 @@ float CStage::GetFieldPositionHeight(const D3DXVECTOR3&rPos)
 //============================================================
 CStage *CStage::Create(const CScene::EMode mode)
 {
+	// ポインタを宣言
+	CStage *pStage = nullptr;	// ステージ情報
+
 	// ステージの生成
-	CStage *pStage = new CStage;
+	switch (mode)
+	{ // モードごとの処理
+	case CScene::MODE_TUTORIAL:
+		break;
+
+	case CScene::MODE_TITLE:
+	case CScene::MODE_GAME:
+	case CScene::MODE_RESULT:
+	case CScene::MODE_RANKING:
+		pStage = new CStage;
+		break;
+
+	default:	// 例外処理
+		assert(false);
+		break;
+	}
+
 	if (pStage == nullptr)
 	{ // 生成に失敗した場合
 

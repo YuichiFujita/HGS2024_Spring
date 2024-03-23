@@ -154,6 +154,10 @@ HRESULT CSceneGame::Init(void)
 	//--------------------------------------------------------
 	//	初期設定
 	//--------------------------------------------------------
+	// カメラを設定
+	GET_MANAGER->GetCamera()->SetState(CCamera::STATE_FOLLOW);	// カメラを追従状態に設定
+	GET_MANAGER->GetCamera()->SetDestFollow();					// 目標位置を設定
+
 	// BGMの再生
 	PLAY_SOUND(CSound::LABEL_BGM_GAME);
 
@@ -253,6 +257,12 @@ void CSceneGame::Update(void)
 	}
 
 #endif	// _DEBUG
+
+	// TODO：リザルト繊維
+	if (GET_INPUTKEY->IsTrigger(DIK_0))
+	{
+		GET_MANAGER->SetScene(CScene::MODE_RESULT);
+	}
 }
 
 //============================================================

@@ -63,13 +63,12 @@ HRESULT CSceneTitle::Init(void)
 	//	初期設定
 	//--------------------------------------------------------
 	// カメラを設定
-	CCamera *pCamera = GET_MANAGER->GetCamera();	// カメラ情報
-	pCamera->SetState(CCamera::STATE_TITLE_WAIT);	// カメラをタイトル待機状態に設定
-	pCamera->SetDestTitleWait();					// 目標位置を設定
-	pCamera->SetEnableUpdate(false);				// 更新を停止
+	GET_MANAGER->GetCamera()->SetState(CCamera::STATE_ROTATE);	// カメラを回転状態に設定
+	GET_MANAGER->GetCamera()->SetDestRotate();					// 目標位置を設定
+	GET_MANAGER->GetCamera()->SetEnableUpdate(false);			// 更新を停止
 
 	// BGMの再生
-	PLAY_SOUND(CSound::LABEL_BGM_GENERAL);
+	GET_MANAGER->GetSound()->Play(CSound::LABEL_BGM_GENERAL);
 
 	// 成功を返す
 	return S_OK;
