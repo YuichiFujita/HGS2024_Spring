@@ -153,6 +153,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="fireFast.h" />
+    <ClInclude Include="fireFluffy.h" />
     <ClInclude Include="header\anim2D.h" />
     <ClInclude Include="header\blur.h" />
     <ClInclude Include="header\bullet.h" />
@@ -238,6 +240,8 @@
     <ClInclude Include="header\wave.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="fireFast.cpp" />
+    <ClCompile Include="fireFluffy.cpp" />
     <ClCompile Include="source\anim2D.cpp" />
     <ClCompile Include="source\blur.cpp" />
     <ClCompile Include="source\bullet.cpp" />
