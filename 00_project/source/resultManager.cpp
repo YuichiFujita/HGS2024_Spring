@@ -15,6 +15,7 @@
 #include "texture.h"
 #include "model.h"
 #include "object2D.h"
+#include "multiValue.h"
 #include "timerManager.h"
 #include "retentionManager.h"
 
@@ -34,43 +35,45 @@ namespace
 
 	const int PRIORITY = 5;	// リザルトの優先順位
 
-	const D3DXCOLOR SETCOL_FADE		= D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);	// α値の停止値
-	const D3DXCOLOR INITCOL_FADE	= XCOL_AWHITE;							// α値の初期値
-	const D3DXVECTOR3 SIZE_FADE		= SCREEN_SIZE - D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// フェードの大きさ
+	const D3DXCOLOR SETCOL_FADE = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);	// α値の停止値
+	const D3DXCOLOR INITCOL_FADE = XCOL_AWHITE;							// α値の初期値
+	const D3DXVECTOR3 SIZE_FADE = SCREEN_SIZE - D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// フェードの大きさ
 
 	const float ADD_ALPHA = 0.008f;	// α値の加算量
 
-	const D3DXVECTOR3 POS_RESULT_MISSION	= D3DXVECTOR3(340.0f, 150.0f, 0.0f);	// リザルト表示の遅刻回避の位置
-	const D3DXVECTOR3 POS_RESULT_RESULT		= D3DXVECTOR3(960.0f, 150.0f, 0.0f);	// リザルト表示の成功失敗の位置
-	const D3DXVECTOR3 SIZE_RESULT			= D3DXVECTOR3(500.0f, 150.0f, 0.0f);	// リザルト表示の大きさ
+	const D3DXVECTOR3 POS_SCORE_LOGO = D3DXVECTOR3(340.0f, 150.0f, 0.0f);	// リザルト表示の遅刻回避の位置
+	const D3DXVECTOR3 SIZE_SCORE_LOGO = D3DXVECTOR3(500.0f * 0.9f, 150.0f * 0.9f, 0.0f);	// リザルト表示の大きさ
+	const D3DXVECTOR3 POS_SCORE = D3DXVECTOR3(590.0f, 150.0f, 0.0f);	// タイム位置
+	const D3DXVECTOR3 SIZE_SCORE = D3DXVECTOR3(98.0f, 117.0f, 0.0f);		// タイム数字大きさ
+	const D3DXVECTOR3 SPACE_SCORE = D3DXVECTOR3(SIZE_SCORE.x * 0.85f, 0.0f, 0.0f);	// タイム数字空白
 
-	const float SET_RESULT_SCALE	= 8.0f;	// リザルト表示の初期拡大率
-	const float SUB_RESULT_SCALE	= 0.65f;	// リザルト表示拡大率の減算量
+	const float SET_SCORE_SCALE = 8.0f;		// リザルト表示の初期拡大率
+	const float SUB_SCORE_SCALE = 0.65f;	// リザルト表示拡大率の減算量
 
-	const D3DXVECTOR3 POS_TIME_LOGO		= D3DXVECTOR3(290.0f, 330.0f, 0.0f);	// タイムロゴ位置
-	const D3DXVECTOR3 SIZE_TIME_LOGO	= D3DXVECTOR3(487.5f, 154.7f, 0.0f);	// タイムロゴ大きさ
-	const D3DXVECTOR3 POS_TIME			= D3DXVECTOR3(590.0f, 330.0f, 0.0f);	// タイム位置
-	const D3DXVECTOR3 SIZE_TIME_VAL		= D3DXVECTOR3(98.0f, 117.0f, 0.0f);		// タイム数字大きさ
-	const D3DXVECTOR3 SIZE_TIME_PART	= D3DXVECTOR3(50.0f, 117.0f, 0.0f);		// タイム区切り大きさ
-	const D3DXVECTOR3 SPACE_TIME_VAL	= D3DXVECTOR3(SIZE_TIME_VAL.x  * 0.85f, 0.0f, 0.0f);	// タイム数字空白
-	const D3DXVECTOR3 SPACE_TIME_PART	= D3DXVECTOR3(SIZE_TIME_PART.x * 0.85f, 0.0f, 0.0f);	// タイム区切り空白
+	const D3DXVECTOR3 POS_TIME_LOGO = D3DXVECTOR3(280.0f, 330.0f, 0.0f);	// タイムロゴ位置
+	const D3DXVECTOR3 SIZE_TIME_LOGO = D3DXVECTOR3(487.5f * 0.9f, 154.7f * 0.9f, 0.0f);	// タイムロゴ大きさ
+	const D3DXVECTOR3 POS_TIME = D3DXVECTOR3(590.0f, 330.0f, 0.0f);	// タイム位置
+	const D3DXVECTOR3 SIZE_TIME_VAL = D3DXVECTOR3(98.0f, 117.0f, 0.0f);		// タイム数字大きさ
+	const D3DXVECTOR3 SIZE_TIME_PART = D3DXVECTOR3(50.0f, 117.0f, 0.0f);		// タイム区切り大きさ
+	const D3DXVECTOR3 SPACE_TIME_VAL = D3DXVECTOR3(SIZE_TIME_VAL.x * 0.85f, 0.0f, 0.0f);	// タイム数字空白
+	const D3DXVECTOR3 SPACE_TIME_PART = D3DXVECTOR3(SIZE_TIME_PART.x * 0.85f, 0.0f, 0.0f);	// タイム区切り空白
 
-	const float	SET_TIME_SCALE	= 8.0f;	// タイム表示の初期拡大率
-	const float	SUB_TIME_SCALE	= 0.3f;	// タイム表示拡大率の減算量
-	const int	TIME_WAIT_CNT	= 3;	// タイム表示状態への変更待機フレーム数
+	const float	SET_TIME_SCALE = 8.0f;	// タイム表示の初期拡大率
+	const float	SUB_TIME_SCALE = 0.3f;	// タイム表示拡大率の減算量
+	const int	TIME_WAIT_CNT = 3;	// タイム表示状態への変更待機フレーム数
 
-	const D3DXVECTOR3 POS_CONT_LOGO		= D3DXVECTOR3(SCREEN_CENT.x, 490.0f, 0.0f);	// コンテニューロゴ位置
-	const D3DXVECTOR3 SIZE_CONT_LOGO	= D3DXVECTOR3(576.0f, 172.0f, 0.0f);		// コンテニューロゴ大きさ
-	const D3DXVECTOR3 POS_CONT_YES		= D3DXVECTOR3(400.0f, 610.0f, 0.0f);		// コンテニュー表示のYESの位置
-	const D3DXVECTOR3 POS_CONT_NO		= D3DXVECTOR3(880.0f, 610.0f, 0.0f);		// コンテニュー表示のNOの位置
-	const D3DXVECTOR3 SIZE_CONT			= D3DXVECTOR3(222.0f, 94.0f, 0.0f);			// コンテニュー表示の大きさ
+	const D3DXVECTOR3 POS_CONT_LOGO = D3DXVECTOR3(SCREEN_CENT.x, 490.0f, 0.0f);	// コンテニューロゴ位置
+	const D3DXVECTOR3 SIZE_CONT_LOGO = D3DXVECTOR3(576.0f, 172.0f, 0.0f);		// コンテニューロゴ大きさ
+	const D3DXVECTOR3 POS_CONT_YES = D3DXVECTOR3(400.0f, 610.0f, 0.0f);		// コンテニュー表示のYESの位置
+	const D3DXVECTOR3 POS_CONT_NO = D3DXVECTOR3(880.0f, 610.0f, 0.0f);		// コンテニュー表示のNOの位置
+	const D3DXVECTOR3 SIZE_CONT = D3DXVECTOR3(222.0f, 94.0f, 0.0f);			// コンテニュー表示の大きさ
 
-	const float	SET_CONT_SCALE	= 8.0f;	// コンテニュー表示の初期拡大率
-	const float	SUB_CONT_SCALE	= 0.3f;	// コンテニュー表示拡大率の減算量
-	const int	CONT_WAIT_CNT	= 3;	// コンテニュー表示状態への変更待機フレーム数
+	const float	SET_CONT_SCALE = 8.0f;	// コンテニュー表示の初期拡大率
+	const float	SUB_CONT_SCALE = 0.3f;	// コンテニュー表示拡大率の減算量
+	const int	CONT_WAIT_CNT = 3;	// コンテニュー表示状態への変更待機フレーム数
 
-	const D3DXCOLOR CHOICE_COL	= D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// 選択中カラー
-	const D3DXCOLOR DEFAULT_COL	= D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);	// 非選択中カラー
+	const D3DXCOLOR CHOICE_COL = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);	// 選択中カラー
+	const D3DXCOLOR DEFAULT_COL = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);	// 非選択中カラー
 }
 
 //************************************************************
@@ -85,19 +88,19 @@ static_assert(NUM_ARRAY(TEXTURE_FILE) == CResultManager::TEXTURE_MAX, "ERROR : T
 //	コンストラクタ
 //============================================================
 CResultManager::CResultManager() :
-	m_pContLogo		(nullptr),		// コンテニューロゴの情報
-	m_pTimeLogo		(nullptr),		// タイムロゴの情報
-	m_pFade			(nullptr),		// フェードの情報
-	m_pTime			(nullptr),		// タイムの情報
-	m_state			(STATE_NONE),	// 状態
-	m_nSelect		(SELECT_YES),	// 現在の選択
-	m_nOldSelect	(SELECT_YES),	// 前回の選択
-	m_fScale		(0.0f),			// ポリゴン拡大率
-	m_nCounterState	(0)				// 状態管理カウンター
+	m_pContLogo(nullptr),		// コンテニューロゴの情報
+	m_pScoreLogo(nullptr),		// タイムロゴの情報
+	m_pTimeLogo(nullptr),		// タイムロゴの情報
+	m_pFade(nullptr),		// フェードの情報
+	m_pScore(nullptr),		// スコアの情報
+	m_pTime(nullptr),		// タイムの情報
+	m_state(STATE_NONE),	// 状態
+	m_nSelect(SELECT_YES),	// 現在の選択
+	m_nOldSelect(SELECT_YES),	// 前回の選択
+	m_fScale(0.0f),			// ポリゴン拡大率
+	m_nCounterState(0)				// 状態管理カウンター
 {
 	// メンバ変数をクリア
-	memset(&m_apResult[0], 0, sizeof(m_apResult));		// リザルト表示の情報
-	memset(&m_apScore[0], 0, sizeof(m_apScore));		// リザルト表示の情報
 	memset(&m_apContinue[0], 0, sizeof(m_apContinue));	// コンテニュー表示の情報
 }
 
@@ -114,12 +117,6 @@ CResultManager::~CResultManager()
 //============================================================
 HRESULT CResultManager::Init(void)
 {
-	// 変数配列を宣言
-	static D3DXVECTOR3 aPosResult[] =	// リザルトの位置
-	{
-		POS_RESULT_MISSION,	// MISSION位置
-		POS_RESULT_RESULT,	// RESULT位置
-	};
 	static D3DXVECTOR3 aPosContinue[] =	// コンテニューの位置
 	{
 		POS_CONT_YES,	// YES位置
@@ -130,18 +127,18 @@ HRESULT CResultManager::Init(void)
 	CTexture *pTexture = GET_MANAGER->GetTexture();	// テクスチャへのポインタ
 
 	// メンバ変数を初期化
-	memset(&m_apResult[0], 0, sizeof(m_apResult));		// リザルト表示の情報
-	memset(&m_apScore[0], 0, sizeof(m_apScore));		// リザルト表示の情報
 	memset(&m_apContinue[0], 0, sizeof(m_apContinue));	// コンテニュー表示の情報
-	m_pContLogo		= nullptr;		// コンテニューロゴの情報
-	m_pTimeLogo		= nullptr;		// タイムロゴの情報
-	m_pFade			= nullptr;		// フェードの情報
-	m_pTime			= nullptr;		// タイムの情報
-	m_state			= STATE_FADEIN;	// 状態
-	m_nCounterState	= 0;			// 状態管理カウンター
-	m_nSelect		= SELECT_YES;	// 現在の選択
-	m_nOldSelect	= SELECT_YES;	// 前回の選択
-	m_fScale		= 0.0f;			// ポリゴン拡大率
+	m_pContLogo = nullptr;		// コンテニューロゴの情報
+	m_pScoreLogo = nullptr;		// スコアロゴの情報
+	m_pTimeLogo = nullptr;		// タイムロゴの情報
+	m_pFade = nullptr;		// フェードの情報
+	m_pScore = nullptr;		// スコアの情報
+	m_pTime = nullptr;		// タイムの情報
+	m_state = STATE_FADEIN;	// 状態
+	m_nCounterState = 0;			// 状態管理カウンター
+	m_nSelect = SELECT_YES;	// 現在の選択
+	m_nOldSelect = SELECT_YES;	// 前回の選択
+	m_fScale = 0.0f;			// ポリゴン拡大率
 
 	//--------------------------------------------------------
 	//	フェードの生成・設定
@@ -168,56 +165,55 @@ HRESULT CResultManager::Init(void)
 	//--------------------------------------------------------
 	//	リザルト表示の生成・設定
 	//--------------------------------------------------------
-	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-	{ // リザルト表示の総数分繰り返す
+	// リザルト表示の生成
+	m_pScoreLogo = CObject2D::Create
+	( // 引数
+		POS_SCORE_LOGO,	// 位置
+		SIZE_SCORE_LOGO * SET_SCORE_SCALE	// 大きさ
+	);
+	if (m_pScoreLogo == nullptr)
+	{ // 生成に失敗した場合
 
-		// リザルト表示の生成
-		m_apResult[nCntResult] = CObject2D::Create
-		( // 引数
-			aPosResult[nCntResult],			// 位置
-			SIZE_RESULT * SET_RESULT_SCALE	// 大きさ
-		);
-		if (m_apResult[nCntResult] == nullptr)
-		{ // 生成に失敗した場合
-
-			// 失敗を返す
-			assert(false);
-			return E_FAIL;
-		}
-
-		// 優先順位を設定
-		m_apResult[nCntResult]->SetPriority(PRIORITY);
-
-		// 描画をしない設定にする
-		m_apResult[nCntResult]->SetEnableDraw(false);
+		// 失敗を返す
+		assert(false);
+		return E_FAIL;
 	}
 
-	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-	{ // リザルト表示の総数分繰り返す
+	// テクスチャを登録・割当
+	m_pScoreLogo->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_SCORE]));
 
-		// リザルト表示の生成
-		m_apScore[nCntResult] = CObject2D::Create
-		( // 引数
-			aPosResult[nCntResult],			// 位置
-			SIZE_RESULT * SET_RESULT_SCALE	// 大きさ
-		);
-		if (m_apScore[nCntResult] == nullptr)
-		{ // 生成に失敗した場合
+	// 優先順位を設定
+	m_pScoreLogo->SetPriority(PRIORITY);
 
-			// 失敗を返す
-			assert(false);
-			return E_FAIL;
-		}
+	// 描画をしない設定にする
+	m_pScoreLogo->SetEnableDraw(false);
 
-		// 優先順位を設定
-		m_apScore[nCntResult]->SetPriority(PRIORITY);
+	//--------------------------------------------------------
+	//	スコア表示の生成・設定
+	//--------------------------------------------------------
+	// スコア表示の生成
+	m_pScore = CMultiValue::Create
+	( // 引数
+		CValue::TEXTURE_NORMAL,
+		GET_RETENTION->GetScore(),
+		3,
+		POS_SCORE,						// 位置
+		SIZE_SCORE * SET_SCORE_SCALE,	// 数字の大きさ
+		SPACE_SCORE						// 数字の空白
+	);
+	if (m_pScore == nullptr)
+	{ // 非使用中の場合
 
-		// 描画をしない設定にする
-		m_apScore[nCntResult]->SetEnableDraw(false);
+		// 失敗を返す
+		assert(false);
+		return E_FAIL;
 	}
 
-	// リザルト表示のテクスチャを設定
-	SetTexResult();
+	// 優先順位を設定
+	m_pScore->SetPriority(PRIORITY);
+
+	// 描画をしない設定にする
+	m_pScore->SetEnableDraw(false);
 
 	//--------------------------------------------------------
 	//	タイムロゴ表示の生成・設定
@@ -353,21 +349,6 @@ void CResultManager::Uninit(void)
 	// タイムの破棄
 	SAFE_REF_RELEASE(m_pTime);
 
-	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-	{ // リザルト表示の総数分繰り返す
-
-		// リザルト表示の終了
-		SAFE_UNINIT(m_apResult[nCntResult]);
-	}
-
-
-	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-	{ // リザルト表示の総数分繰り返す
-
-		// リザルト表示の終了
-		SAFE_UNINIT(m_apScore[nCntResult]);
-	}
-
 	for (int nCntResult = 0; nCntResult < SELECT_MAX; nCntResult++)
 	{ // 選択肢の総数分繰り返す
 
@@ -377,6 +358,9 @@ void CResultManager::Uninit(void)
 
 	// コンテニューロゴ表示の終了
 	SAFE_UNINIT(m_pContLogo);
+
+	// すこあロゴ表示の終了
+	SAFE_UNINIT(m_pScoreLogo);
 
 	// タイムロゴ表示の終了
 	SAFE_UNINIT(m_pTimeLogo);
@@ -444,21 +428,21 @@ void CResultManager::Update(void)
 		if (UpdateDrawWait(CONT_WAIT_CNT))
 		{ // 待機完了の場合
 
-			//// コンテニュー表示の拡大率を設定
-			//m_fScale = SET_CONT_SCALE;
+			// コンテニュー表示の拡大率を設定
+			m_fScale = SET_CONT_SCALE;
 
-			//// コンテニューロゴ表示の描画開始
-			//m_pContLogo->SetEnableDraw(true);
-			//
-			//for (int nCntResult = 0; nCntResult < SELECT_MAX; nCntResult++)
-			//{ // 選択肢の総数分繰り返す
+			// コンテニューロゴ表示の描画開始
+			m_pContLogo->SetEnableDraw(true);
 
-			//	// コンテニュー表示の描画開始
-			//	m_apContinue[nCntResult]->SetEnableDraw(true);
-			//}
+			for (int nCntResult = 0; nCntResult < SELECT_MAX; nCntResult++)
+			{ // 選択肢の総数分繰り返す
+
+				// コンテニュー表示の描画開始
+				m_apContinue[nCntResult]->SetEnableDraw(true);
+			}
 
 			// 状態を変更
-			m_state = STATE_WAIT;	// コンテニュー表示状態
+			m_state = STATE_CONTINUE;	// コンテニュー表示状態
 		}
 
 		break;
@@ -472,8 +456,8 @@ void CResultManager::Update(void)
 
 	case STATE_WAIT:	// 遷移待機状態
 
-	// 遷移決定の更新
-		UpdateTransition();
+		// 選択の更新
+		UpdateSelect();
 
 		break;
 
@@ -485,20 +469,6 @@ void CResultManager::Update(void)
 	// 遷移決定の更新
 	UpdateTransition();
 
-	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-	{ // リザルト表示の総数分繰り返す
-
-		// リザルト表示の更新
-		m_apResult[nCntResult]->Update();
-	}
-
-	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-	{ // リザルト表示の総数分繰り返す
-
-		// リザルト表示の更新
-		m_apScore[nCntResult]->Update();
-	}
-
 	for (int nCntResult = 0; nCntResult < SELECT_MAX; nCntResult++)
 	{ // 選択肢の総数分繰り返す
 
@@ -508,6 +478,9 @@ void CResultManager::Update(void)
 
 	// コンテニューロゴ表示の更新
 	m_pContLogo->Update();
+
+	// すこあロゴ表示の更新
+	m_pScoreLogo->Update();
 
 	// タイムロゴ表示の更新
 	m_pTimeLogo->Update();
@@ -581,22 +554,12 @@ void CResultManager::UpdateFade(void)
 		// 透明度を補正
 		colFade.a = SETCOL_FADE.a;
 
-		for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-		{ // リザルト表示の総数分繰り返す
-
-			// リザルト表示の描画開始
-			m_apResult[nCntResult]->SetEnableDraw(true);
-		}
-
-		for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-		{ // リザルト表示の総数分繰り返す
-
-			// リザルト表示の描画開始
-			m_apScore[nCntResult]->SetEnableDraw(true);
-		}
+		// リザルト表示の描画開始
+		m_pScoreLogo->SetEnableDraw(true);
+		m_pScore->SetEnableDraw(true);
 
 		// リザルト表示の拡大率を設定
-		m_fScale = SET_RESULT_SCALE;
+		m_fScale = SET_SCORE_SCALE;
 
 		// 状態を変更
 		m_state = STATE_RESULT;	// リザルト表示状態
@@ -615,38 +578,18 @@ void CResultManager::UpdateResult(void)
 	{ // 拡大率が最小値より大きい場合
 
 		// 拡大率を減算
-		m_fScale -= SUB_RESULT_SCALE;
+		m_fScale -= SUB_SCORE_SCALE;
 
-		for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-		{ // リザルト表示の総数分繰り返す
-
-			// リザルト表示の大きさを設定
-			m_apResult[nCntResult]->SetVec3Sizing(SIZE_RESULT * m_fScale);
-		}
-
-		for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-		{ // リザルト表示の総数分繰り返す
-
-			// リザルト表示の大きさを設定
-			m_apScore[nCntResult]->SetVec3Sizing(SIZE_RESULT * m_fScale);
-		}
+		// リザルト表示の大きさを設定
+		m_pScoreLogo->SetVec3Sizing(SIZE_SCORE_LOGO * m_fScale);
+		m_pScore->SetVec3Sizing(SIZE_SCORE * m_fScale);
 	}
 	else
 	{ // 拡大率が最小値以下の場合
 
-		for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-		{ // リザルト表示の総数分繰り返す
-
-			// リザルト表示の大きさを設定
-			m_apResult[nCntResult]->SetVec3Sizing(SIZE_RESULT);
-		}
-
-		for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-		{ // リザルト表示の総数分繰り返す
-
-			// リザルト表示の大きさを設定
-			m_apScore[nCntResult]->SetVec3Sizing(SIZE_RESULT);
-		}
+		// リザルト表示の大きさを設定
+		m_pScoreLogo->SetVec3Sizing(SIZE_SCORE_LOGO);
+		m_pScore->SetVec3Sizing(SIZE_SCORE);
 
 		// 状態を変更
 		m_state = STATE_TIME_WAIT;	// タイム表示待機状態
@@ -742,12 +685,12 @@ void CResultManager::UpdateContinue(void)
 void CResultManager::UpdateSelect(void)
 {
 	// ポインタを宣言
-	CInputKeyboard	*pKeyboard	= GET_INPUTKEY;	// キーボード
-	CInputPad		*pPad		= GET_INPUTPAD;		// パッド
+	CInputKeyboard	*pKeyboard = GET_INPUTKEY;	// キーボード
+	CInputPad		*pPad = GET_INPUTPAD;		// パッド
 
 	if (pKeyboard->IsTrigger(DIK_A)
-	||  pKeyboard->IsTrigger(DIK_LEFT)
-	||  pPad->IsTrigger(CInputPad::KEY_LEFT))
+		|| pKeyboard->IsTrigger(DIK_LEFT)
+		|| pPad->IsTrigger(CInputPad::KEY_LEFT))
 	{ // 左移動の操作が行われた場合
 
 		// 左に選択をずらす
@@ -757,8 +700,8 @@ void CResultManager::UpdateSelect(void)
 		PLAY_SOUND(CSound::LABEL_SE_SELECT_000);	// 選択操作音00
 	}
 	if (pKeyboard->IsTrigger(DIK_D)
-	||  pKeyboard->IsTrigger(DIK_RIGHT)
-	||  pPad->IsTrigger(CInputPad::KEY_RIGHT))
+		|| pKeyboard->IsTrigger(DIK_RIGHT)
+		|| pPad->IsTrigger(CInputPad::KEY_RIGHT))
 	{ // 右移動の操作が行われた場合
 
 		// 右に選択をずらす
@@ -784,16 +727,16 @@ void CResultManager::UpdateSelect(void)
 void CResultManager::UpdateTransition(void)
 {
 	// ポインタを宣言
-	CInputKeyboard	*pKeyboard	= GET_INPUTKEY;	// キーボード
-	CInputPad		*pPad		= GET_INPUTPAD;		// パッド
+	CInputKeyboard	*pKeyboard = GET_INPUTKEY;	// キーボード
+	CInputPad		*pPad = GET_INPUTPAD;		// パッド
 
 	if (pKeyboard->IsTrigger(DIK_RETURN)
-	||  pKeyboard->IsTrigger(DIK_SPACE)
-	||  pPad->IsTrigger(CInputPad::KEY_A)
-	||  pPad->IsTrigger(CInputPad::KEY_B)
-	||  pPad->IsTrigger(CInputPad::KEY_X)
-	||  pPad->IsTrigger(CInputPad::KEY_Y)
-	||  pPad->IsTrigger(CInputPad::KEY_START))
+		|| pKeyboard->IsTrigger(DIK_SPACE)
+		|| pPad->IsTrigger(CInputPad::KEY_A)
+		|| pPad->IsTrigger(CInputPad::KEY_B)
+		|| pPad->IsTrigger(CInputPad::KEY_X)
+		|| pPad->IsTrigger(CInputPad::KEY_Y)
+		|| pPad->IsTrigger(CInputPad::KEY_START))
 	{
 		if (m_state != STATE_WAIT)
 		{ // 遷移待機状態ではない場合
@@ -810,10 +753,24 @@ void CResultManager::UpdateTransition(void)
 			if (GET_MANAGER->GetFade()->GetState() == CFade::FADE_NONE)
 			{ // フェード中ではない場合
 
-					// シーンの設定
-				GET_MANAGER->SetScene(CScene::MODE_RANKING);	// ランキング画面
+				switch (m_nSelect)
+				{ // 選択ごとの処理
+				case SELECT_YES:
 
-			// サウンドの再生
+					// シーンの設定
+					GET_MANAGER->SetScene(CScene::MODE_GAME);	// ゲーム画面
+
+					break;
+
+				case SELECT_NO:
+
+					// シーンの設定
+					GET_MANAGER->SetScene(CScene::MODE_RANKING);	// ランキング画面
+
+					break;
+				}
+
+				// サウンドの再生
 				PLAY_SOUND(CSound::LABEL_SE_DECISION_000);	// 決定音00
 			}
 		}
@@ -825,34 +782,15 @@ void CResultManager::UpdateTransition(void)
 //============================================================
 void CResultManager::SkipStaging(void)
 {
-	// リザルト表示の描画をONにし、大きさを設定
-	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-	{ // リザルト表示の総数分繰り返す
-
-		// リザルト表示の描画開始
-		m_apResult[nCntResult]->SetEnableDraw(true);
-
-		// リザルト表示の大きさを設定
-		m_apResult[nCntResult]->SetVec3Sizing(SIZE_RESULT);
-	}
-
-	// リザルト表示の描画をONにし、大きさを設定
-	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
-	{ // リザルト表示の総数分繰り返す
-
-		// リザルト表示の描画開始
-		m_apScore[nCntResult]->SetEnableDraw(true);
-
-		// リザルト表示の大きさを設定
-		m_apScore[nCntResult]->SetVec3Sizing(SIZE_RESULT);
-	}
-
-	// タイム表示をONにする
+	// すこあ・タイム表示をONにする
+	m_pScoreLogo->SetEnableDraw(true);
 	m_pScore->SetEnableDraw(true);
 	m_pTimeLogo->SetEnableDraw(true);
 	m_pTime->SetEnableDraw(true);
 
-	// タイム表示の大きさを設定
+	// すこあ・タイム表示の大きさを設定
+	m_pScoreLogo->SetVec3Sizing(SIZE_SCORE_LOGO);
+	m_pScore->SetVec3Sizing(SIZE_SCORE);
 	m_pTimeLogo->SetVec3Sizing(SIZE_TIME_LOGO);
 	m_pTime->SetSizingValue(SIZE_TIME_VAL);
 	m_pTime->SetSizingPart(SIZE_TIME_PART);
@@ -878,24 +816,6 @@ void CResultManager::SkipStaging(void)
 
 	// 状態を変更
 	m_state = STATE_WAIT;	// 遷移待機状態
-}
-
-//============================================================
-//	リザルト表示のテクスチャの設定処理
-//============================================================
-void CResultManager::SetTexResult(void)
-{
-	// ポインタを宣言
-	CTexture *pTexture = GET_MANAGER->GetTexture();	// テクスチャへのポインタ
-
-	// MISSIONテクスチャを登録・割当
-	m_apResult[0]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_MISSION]));
-
-	// MISSIONテクスチャを登録・割当
-	m_apScore[0]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_MISSION]));
-
-	//// RESULTテクスチャを登録・割当
-	//m_apResult[1]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_CLEAR]));
 }
 
 //============================================================
