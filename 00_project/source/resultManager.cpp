@@ -25,10 +25,8 @@ namespace
 {
 	const char *TEXTURE_FILE[] =	// テクスチャファイル
 	{
-		"data\\TEXTURE\\result000.png",		// ボス討伐テクスチャ
-		"data\\TEXTURE\\result001.png",		// 成功テクスチャ
-		"data\\TEXTURE\\result002.png",		// 失敗テクスチャ
-		"data\\TEXTURE\\result003.png",		// タイム表示テクスチャ
+		"data\\TEXTURE\\result001.png",		// ボス討伐テクスチャ
+		"data\\TEXTURE\\result000.png",		// タイム表示テクスチャ
 		"data\\TEXTURE\\continue000.png",	// コンテニュー表示テクスチャ
 		"data\\TEXTURE\\select000.png",		// YESテクスチャ
 		"data\\TEXTURE\\select001.png",		// NOテクスチャ
@@ -42,16 +40,16 @@ namespace
 
 	const float ADD_ALPHA = 0.008f;	// α値の加算量
 
-	const D3DXVECTOR3 POS_RESULT_MISSION	= D3DXVECTOR3(380.0f, 150.0f, 0.0f);	// リザルト表示の遅刻回避の位置
+	const D3DXVECTOR3 POS_RESULT_MISSION	= D3DXVECTOR3(340.0f, 150.0f, 0.0f);	// リザルト表示の遅刻回避の位置
 	const D3DXVECTOR3 POS_RESULT_RESULT		= D3DXVECTOR3(960.0f, 150.0f, 0.0f);	// リザルト表示の成功失敗の位置
-	const D3DXVECTOR3 SIZE_RESULT			= D3DXVECTOR3(632.7f, 203.5f, 0.0f);	// リザルト表示の大きさ
+	const D3DXVECTOR3 SIZE_RESULT			= D3DXVECTOR3(500.0f, 150.0f, 0.0f);	// リザルト表示の大きさ
 
-	const float SET_RESULT_SCALE	= 15.0f;	// リザルト表示の初期拡大率
+	const float SET_RESULT_SCALE	= 8.0f;	// リザルト表示の初期拡大率
 	const float SUB_RESULT_SCALE	= 0.65f;	// リザルト表示拡大率の減算量
 
 	const D3DXVECTOR3 POS_TIME_LOGO		= D3DXVECTOR3(290.0f, 330.0f, 0.0f);	// タイムロゴ位置
 	const D3DXVECTOR3 SIZE_TIME_LOGO	= D3DXVECTOR3(487.5f, 154.7f, 0.0f);	// タイムロゴ大きさ
-	const D3DXVECTOR3 POS_TIME			= D3DXVECTOR3(555.0f, 330.0f, 0.0f);	// タイム位置
+	const D3DXVECTOR3 POS_TIME			= D3DXVECTOR3(590.0f, 330.0f, 0.0f);	// タイム位置
 	const D3DXVECTOR3 SIZE_TIME_VAL		= D3DXVECTOR3(98.0f, 117.0f, 0.0f);		// タイム数字大きさ
 	const D3DXVECTOR3 SIZE_TIME_PART	= D3DXVECTOR3(50.0f, 117.0f, 0.0f);		// タイム区切り大きさ
 	const D3DXVECTOR3 SPACE_TIME_VAL	= D3DXVECTOR3(SIZE_TIME_VAL.x  * 0.85f, 0.0f, 0.0f);	// タイム数字空白
@@ -833,8 +831,8 @@ void CResultManager::SetTexResult(void)
 	// MISSIONテクスチャを登録・割当
 	m_apResult[0]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_MISSION]));
 
-	// RESULTテクスチャを登録・割当
-	m_apResult[1]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_CLEAR]));
+	//// RESULTテクスチャを登録・割当
+	//m_apResult[1]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_CLEAR]));
 }
 
 //============================================================
