@@ -15,7 +15,7 @@
 //************************************************************
 namespace result
 {
-	const int NUM_POLYGON = 2;	// リザルト表示に必要なポリゴン数
+	const int NUM_POLYGON = 1;	// リザルト表示に必要なポリゴン数
 }
 
 //************************************************************
@@ -35,8 +35,6 @@ public:
 	enum ETexture
 	{
 		TEXTURE_MISSION = 0,	// ボス討伐テクスチャ
-		TEXTURE_CLEAR,			// 成功テクスチャ
-		TEXTURE_FAILED,			// 失敗テクスチャ
 		TEXTURE_TIME,			// タイム表示テクスチャ
 		TEXTURE_CONTINUE,		// コンテニュー表示テクスチャ
 		TEXTURE_YES,			// YESテクスチャ
