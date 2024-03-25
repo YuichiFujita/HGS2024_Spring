@@ -26,6 +26,8 @@
 #include "flower.h"
 #include "collision.h"
 #include "stage.h"
+#include "multiValue.h"
+#include "pause.h"
 
 //************************************************************
 //	定数宣言
@@ -74,6 +76,9 @@ HRESULT CGameManager::Init(void)
 	//生成カウントを初期化
 	SpownCount = 0;
 
+	// 花生成カウント
+	nFlowerCount = 0;
+
 	// 中心からの燃え広がり量
 	m_fMoveBurn = 0.0f;
 
@@ -115,7 +120,11 @@ void CGameManager::Update(void)
 		break;
 
 	case STATE_NORMAL:
-		SpownManager();
+		if (!CSceneGame::GetPause()->IsPause())
+		{
+			SpownManager();
+			CSceneGame::GetScoreUI()->SetNum(CFlower::GetList()->GetNumAll());
+		}
 		break;
 
 	default:	// 例外処理
@@ -130,6 +139,9 @@ void CGameManager::Update(void)
 void CGameManager::SetBurn(void)
 {
 	if (m_state != STATE_NORMAL) { return; }
+
+	// タイマー計測終了
+	CSceneGame::GetTimerUI()->End();
 
 	// カメラ揺れを設定
 	GET_MANAGER->GetCamera()->SetSwing(CCamera::TYPE_MAIN, CCamera::SSwing(10.0f, 1.5f, 0.3f));
