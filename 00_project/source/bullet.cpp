@@ -147,6 +147,9 @@ void CBullet::CollisionFire(void)
 				if (pObjCheck->GetLabel() == CObject::LABEL_FIRE)
 				{ // オブジェクトラベルが地盤ではない場合
 
+					// 死亡してたら次へ
+					if (pObjCheck->IsDeath()) { pObjCheck = pObjectNext; continue; }
+
 					D3DXVECTOR3 posFire = pObjCheck->GetVec3Position();	// 敵位置
 
 					if (collision::Circle3D(m_pos, posFire, 25.0f, 25.0f) == true)
