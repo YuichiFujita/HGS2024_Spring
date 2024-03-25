@@ -41,6 +41,11 @@ public:
 	void Update(void) override;		// 更新
 	void Draw(CShader* pShader = nullptr) override;	// 描画
 
+	void UpdateRot();
+	void UpdateShot();
+
+	float GetRadius() { return 10.0f; }
+
 	// 静的メンバ関数
 	static CPlayer* Create	// 生成
 	( // 引数
@@ -49,6 +54,9 @@ public:
 		const D3DXVECTOR3& rRot = VEC3_ZERO,	// 向き
 		const D3DXVECTOR3& rScale = VEC3_ONE	// 大きさ
 	);
+
+private:
+	float ShotPower;	//弾の強さ
 };
 
 #endif	// _MODEL_FONT_H_
