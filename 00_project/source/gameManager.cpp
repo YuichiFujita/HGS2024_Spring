@@ -34,8 +34,9 @@ namespace
 	const int GAMEEND_WAIT_FRAME = 180;	// リザルト画面への遷移余韻フレーム
 
 	const int SPOWN_NUM = 2;	// 初期の生成数
-	const int SPOWN_RAND_POSX = 300;	// 幅のランダム生成範囲
-	const float SPOWN_POSY = 1000.0f;	// 幅のランダム生成範囲
+	const int SPOWN_RAND_POSX = 1200;	// 幅のランダム生成範囲
+	const float SPOWN_POSY = 1000.0f;	// 生成の高さ
+	const int SPOWN_RAND_SPEED = 90;	// 生成時の炎の速度のランダム範囲
 }
 
 //************************************************************
@@ -164,18 +165,66 @@ void CGameManager::SpownManager()
 		for (int Spown = 0; Spown < Spownlevel; Spown++)
 		{
 			float frandPos = (float)(rand() % SPOWN_RAND_POSX + 1);
+			float frandSpeed = (float)(rand() % SPOWN_RAND_SPEED + 1);
+			int nRandFire = 0;
 
-			CFire::Create
-			(
-				CFire::EType::TYPE_NORMAL,
-				1.0f,
-				D3DXVECTOR3
+			if (Spownlevel >= 5)
+			{
+				nRandFire = rand() % 3;
+			}
+			else if (Spownlevel >= 4)
+			{
+				nRandFire = rand() % 2;
+			}
+			else
+			{
+				nRandFire = rand() % 1;
+			}
+
+			switch (nRandFire)
+			{
+			case 0:
+				CFire::Create
 				(
-					frandPos - ((float)SPOWN_RAND_POSX * 0.5f),
-					SPOWN_POSY,
-					0.0f
-				)
-			);
+					CFire::EType::TYPE_NORMAL,
+					1.0f + ((frandSpeed - ((float)SPOWN_RAND_SPEED * 0.5f)) * 0.01f),
+					D3DXVECTOR3
+					(
+						frandPos - ((float)SPOWN_RAND_POSX * 0.5f),
+						SPOWN_POSY,
+						0.0f
+					)
+				);
+				break;
+			case 1:
+				CFire::Create
+				(
+					CFire::EType::TYPE_FLUFFY,
+					1.0f + ((frandSpeed - ((float)SPOWN_RAND_SPEED * 0.5f)) * 0.01f),
+					D3DXVECTOR3
+					(
+						frandPos - ((float)SPOWN_RAND_POSX * 0.5f),
+						SPOWN_POSY,
+						0.0f
+					)
+				);
+				break;
+			case 2:
+				CFire::Create
+				(
+					CFire::EType::TYPE_FAST,
+					1.0f + ((frandSpeed - ((float)SPOWN_RAND_SPEED * 0.5f)) * 0.01f),
+					D3DXVECTOR3
+					(
+						frandPos - ((float)SPOWN_RAND_POSX * 0.5f),
+						SPOWN_POSY,
+						0.0f
+					)
+				);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 

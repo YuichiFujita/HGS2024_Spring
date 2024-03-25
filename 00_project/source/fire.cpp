@@ -9,6 +9,8 @@
 //************************************************************
 #include "fire.h"
 #include "fireNormal.h"
+#include "fireFast.h"
+#include "fireFluffy.h"
 #include "manager.h"
 #include "renderer.h"
 #include "stage.h"
@@ -163,14 +165,14 @@ CFire *CFire::Create
 	case TYPE_FLUFFY:
 
 		// 真っ直ぐ炎を生成
-		pFire = new CFireNormal(type);
+		pFire = new CFireFluffy(type);
 
 		break;
 
 	case TYPE_FAST:
 
 		// 真っ直ぐ炎を生成
-		pFire = new CFireNormal(type);
+		pFire = new CFireFast(type);
 
 		break;
 
@@ -267,8 +269,8 @@ bool CFire::UpdateDelete(void)
 		// 炎消す
 		Uninit();
 
-		// 全焼状態にする
-		CSceneGame::GetGameManager()->SetBurn();
+		//// 全焼状態にする
+		//CSceneGame::GetGameManager()->SetBurn();
 
 		return true;
 	}
