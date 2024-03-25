@@ -9,8 +9,6 @@
 //************************************************************
 #include "fire.h"
 #include "fireNormal.h"
-#include "fireFluffy.h"
-#include "fireFast.h"
 #include "manager.h"
 #include "renderer.h"
 #include "stage.h"
