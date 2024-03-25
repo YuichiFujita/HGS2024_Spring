@@ -164,18 +164,28 @@ void CBullet::CollisionFire(void)
 						switch (m_Kill)
 						{
 						case 1:
+							// SE‚ÌÄ¶
+							PLAY_SOUND(CSound::LABEL_SE_COMBO00);
 							m_pScoreBG->BindTexture("data\\TEXTURE\\score1.png");
 							break;
 						case 2:
+							// SE‚ÌÄ¶
+							PLAY_SOUND(CSound::LABEL_SE_COMBO01);
 							m_pScoreBG->BindTexture("data\\TEXTURE\\score2.png");
 							break;
 						case 3:
+							// SE‚ÌÄ¶
+							PLAY_SOUND(CSound::LABEL_SE_COMBO02);
 							m_pScoreBG->BindTexture("data\\TEXTURE\\score3.png");
 							break;
 						case 4:
+							// SE‚ÌÄ¶
+							PLAY_SOUND(CSound::LABEL_SE_COMBO03);
 							m_pScoreBG->BindTexture("data\\TEXTURE\\score4.png");
 							break;
 						default:
+							// SE‚ÌÄ¶
+							PLAY_SOUND(CSound::LABEL_SE_COMBO04);
 							m_pScoreBG->BindTexture("data\\TEXTURE\\score5.png");
 							break;
 						}
