@@ -23,6 +23,7 @@
 #include "stage.h"
 #include "particle3D.h"
 #include "multiValue.h"
+#include "flower.h"
 
 //************************************************************
 //	定数宣言
@@ -140,9 +141,26 @@ void CBullet::CollisionFire(void)
 						CParticle3D::Create(CParticle3D::TYPE_STOMP_PLANT, posFire);
 
 						m_Kill++;
+						useful::LimitMaxNum(m_Kill, 5);
 
 						m_pScoreBG = CObjectBillboard::Create(posFire, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 						m_pScoreBG->SetScale(true);
+						m_pScoreBG->SetPriority(5);
+
+						// レンダーステートの情報を取得
+						CRenderState *pRenderState = m_pScoreBG->GetRenderState();
+
+						// Zテストの設定
+						pRenderState->SetZFunc(D3DCMP_ALWAYS);
+
+						// Zバッファの使用状況の設定
+						pRenderState->SetZUpdate(false);
+
+						// αテストを有効にする
+						pRenderState->SetAlphaTest(true);			// αテストの有効 / 無効の設定
+						pRenderState->SetAlphaFunc(D3DCMP_GREATER);	// αテストの設定
+						pRenderState->SetAlphaNumRef(160);			// αテストの参照値設定
+
 						switch (m_Kill)
 						{
 						case 1:
@@ -166,6 +184,9 @@ void CBullet::CollisionFire(void)
 						//スコア加算
 						CMultiValue* pScore = CSceneGame::GetScoreUI();
 						pScore->AddNum(m_Kill);
+
+						// 花はやし
+						CFlower::RandomSpawn(m_Kill);
 
 						pObjCheck->Uninit();
 					}

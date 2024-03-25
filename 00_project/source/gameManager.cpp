@@ -120,16 +120,7 @@ void CGameManager::Update(void)
 
 	case STATE_NORMAL:
 		SpownManager();
-		CSceneGame::GetScoreUI()->SetNum(CFlower::GetList()->GetNumAll() * 2);
-
-		// 花生成カウント
-		nFlowerCount++;
-		if (nFlowerCount % 60 == 0)
-		{
-			nFlowerCount = 0;
-			CFlower::RandomSpawn(2);
-		}
-
+		CSceneGame::GetScoreUI()->SetNum(CFlower::GetList()->GetNumAll());
 		break;
 
 	default:	// 例外処理
