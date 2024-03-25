@@ -88,6 +88,10 @@ HRESULT CSceneGame::Init(void)
 	pScoreBG->BindTexture("data\\TEXTURE\\timer001.png");
 	pScoreBG->SetLabel(CObject::ELabel::LABEL_UI);
 
+	pScoreBG = CObject2D::Create(D3DXVECTOR3(70.0f, 45.0f, 0.0f), D3DXVECTOR3(180.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pScoreBG->BindTexture("data\\TEXTURE\\result001.png");
+	pScoreBG->SetLabel(CObject::ELabel::LABEL_UI);
+
 	m_pScoreUI = CMultiValue::Create
 	(
 		CValue::ETexture::TEXTURE_NORMAL,
