@@ -52,6 +52,10 @@ HRESULT CFireFluffy::Init(void)
 		return E_FAIL;
 	}
 
+	m_move = VEC3_ZERO;
+	m_nMoveCountMax = 60;
+	m_nMoveCount = 0;
+
 	// 成功を返す
 	return S_OK;
 }
@@ -74,6 +78,18 @@ void CFireFluffy::UpdateMove(void)
 
 	// 位置の更新
 	UpdatePosition(&pos);
+
+	m_nMoveCount++;
+
+	if (m_nMoveCount < 60)
+	{
+		m_nMoveCount = 0;
+	}
+
+	m_move.x = sinf((float)(m_nMoveCountMax / m_nMoveCount)) * 20.0f;
+	m_move.y = cosf((float)(m_nMoveCountMax / m_nMoveCount)) * 20.0f;
+
+	pos += m_move;
 
 	// 位置を反映
 	SetVec3Position(pos);

@@ -1,14 +1,14 @@
 //============================================================
 //
-//	早い炎ヘッダー [fireFast.h]
+//	ふわふわ炎ヘッダー [fireFluffy.h]
 //	Author：藤田勇一
 //
 //============================================================
 //************************************************************
 //	二重インクルード防止
 //************************************************************
-#ifndef _FIRE_NORMAL_H_
-#define _FIRE_NORMAL_H_
+#ifndef _FIRE_FLUFFY_H_
+#define _FIRE_FLUFFY_H_
 
 //************************************************************
 //	インクルードファイル
@@ -20,14 +20,14 @@
 //	クラス定義
 //************************************************************
 // 真っ直ぐ炎クラス
-class CFireFast : public CFire
+class CFireFluffy : public CFire
 {
 public:
 	// コンストラクタ
-	explicit CFireFast(const EType type);
+	explicit CFireFluffy(const EType type);
 
 	// デストラクタ
-	virtual ~CFireFast();
+	virtual ~CFireFluffy();
 
 	// オーバーライド関数
 	HRESULT Init(void) override;	// 初期化
@@ -36,6 +36,13 @@ public:
 protected:
 	// オーバーライド関数
 	void UpdateMove(void) override;	// 挙動の更新
+
+private:
+
+	//メンバ変数
+	D3DXVECTOR3 m_move;
+	int m_nMoveCountMax;
+	int m_nMoveCount;
 };
 
 #endif	// _FIRE_NORMAL_H_
