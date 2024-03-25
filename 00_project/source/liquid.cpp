@@ -19,7 +19,12 @@ namespace
 {
 	const char *TEXTURE_FILE[][CLiquid::LIQUID_MAX] =	// テクスチャファイル
 	{
-		{ // マグマテクスチャ
+		{ // 海テクスチャ
+			"data\\TEXTURE\\sea000.jpg",	// 水 (下)
+			"data\\TEXTURE\\sea000.png",	// 水 (上)
+		},
+
+		{ // 溶岩テクスチャ
 			"data\\TEXTURE\\lava000.png",	// マグマ (下)
 			"data\\TEXTURE\\lava001.png",	// マグマ (上)
 		},

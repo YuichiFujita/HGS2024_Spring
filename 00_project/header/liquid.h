@@ -30,7 +30,8 @@ public:
 	// Ží—Þ—ñ‹“
 	enum EType
 	{
-		TYPE_LAVA = 0,	// ƒ}ƒOƒ}
+		TYPE_SEA = 0,	// ŠC
+		TYPE_LAVA,		// —nŠâ
 		TYPE_MAX		// ‚±‚Ì—ñ‹“Œ^‚Ì‘”
 	};
 
