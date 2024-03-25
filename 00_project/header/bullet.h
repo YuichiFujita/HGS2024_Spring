@@ -62,6 +62,8 @@ private:
 	float	m_Radius;	// 移動量
 	CEffect3D::EType	m_type;	// テクスチャ
 	int		m_nLife;			// 寿命
+	int		m_Kill;			// 寿命
+	CObjectBillboard* m_pScoreBG;
 };
 
 #endif	// _FLOWER_H_
