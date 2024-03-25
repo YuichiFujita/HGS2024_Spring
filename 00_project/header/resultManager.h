@@ -92,7 +92,8 @@ private:
 	bool UpdateDrawWait(const int nWait);	// 表示待機
 
 	// メンバ変数
-	CObject2D *m_apResult[result::NUM_POLYGON];	// リザルト表示の情報
+	CObject2D* m_apResult[result::NUM_POLYGON];	// リザルト表示の情報
+	CObject2D *m_apScore[result::NUM_POLYGON];	// リザルト表示の情報
 	CObject2D *m_apContinue[SELECT_MAX];		// コンテニュー表示の情報
 	CObject2D *m_pContLogo;	// コンテニューロゴの情報
 	CObject2D *m_pTimeLogo;	// タイムロゴの情報

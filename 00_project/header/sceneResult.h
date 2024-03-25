@@ -19,6 +19,7 @@
 //	前方宣言
 //************************************************************
 class CResultManager;	// リザルトマネージャークラス
+class CMultiValue;	// リザルトマネージャークラス
 
 //************************************************************
 //	クラス定義
@@ -41,6 +42,7 @@ public:
 
 	// 静的メンバ関数
 	static CResultManager *GetResultManager(void);	// リザルトマネージャー取得
+	static CMultiValue* m_pScoreUI;		// スコアUI
 
 private:
 	// 静的メンバ変数

@@ -13,11 +13,13 @@
 #include "sound.h"
 #include "camera.h"
 #include "resultManager.h"
+#include "multiValue.h"
 
 //************************************************************
 //	静的メンバ変数宣言
 //************************************************************
 CResultManager *CSceneResult::m_pResultManager = nullptr;	// リザルトマネージャー
+CMultiValue* CSceneResult::m_pScoreUI = nullptr;	// スコア
 
 //************************************************************
 //	子クラス [CSceneResult] のメンバ関数
