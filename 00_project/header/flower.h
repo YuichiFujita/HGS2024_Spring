@@ -42,10 +42,10 @@ public:
 	~CFlower();
 
 	// オーバーライド関数
-	HRESULT Init(void);	// 初期化
-	void Uninit(void);	// 終了
-	void Update(void);	// 更新
-	void Draw(void);	// 描画
+	HRESULT Init(void) override;	// 初期化
+	void Uninit(void) override;		// 終了
+	void Update(void) override;		// 更新
+	void Draw(CShader *pShader = nullptr) override;	// 描画
 
 	// 静的メンバ関数
 	static CFlower *Create(const D3DXVECTOR3& rPos, const D3DXVECTOR3& rRot);	// 生成
