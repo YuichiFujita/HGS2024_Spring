@@ -9,6 +9,8 @@
 //************************************************************
 #include "fire.h"
 #include "fireNormal.h"
+#include "fireFast.h"
+#include "fireFluffy.h"
 #include "manager.h"
 #include "renderer.h"
 #include "stage.h"
@@ -161,14 +163,14 @@ CFire *CFire::Create
 	case TYPE_FLUFFY:
 
 		// ^‚Á’¼‚®‰Š‚ğ¶¬
-		pFire = new CFireNormal(type);
+		pFire = new CFireFluffy(type);
 
 		break;
 
 	case TYPE_FAST:
 
 		// ^‚Á’¼‚®‰Š‚ğ¶¬
-		pFire = new CFireNormal(type);
+		pFire = new CFireFast(type);
 
 		break;
 

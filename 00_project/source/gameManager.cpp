@@ -29,8 +29,9 @@ namespace
 	const int GAMEEND_WAIT_FRAME = 180;	// リザルト画面への遷移余韻フレーム
 
 	const int SPOWN_NUM = 2;	// 初期の生成数
-	const int SPOWN_RAND_POSX = 300;	// 幅のランダム生成範囲
-	const float SPOWN_POSY = 1000.0f;	// 幅のランダム生成範囲
+	const int SPOWN_RAND_POSX = 400;	// 幅のランダム生成範囲
+	const float SPOWN_POSY = 1000.0f;	// 生成の高さ
+	const int SPOWN_RAND_SPEED = 45;	// 生成時の炎の速度のランダム範囲
 }
 
 //************************************************************
@@ -125,11 +126,12 @@ void CGameManager::SpownManager()
 		for (int Spown = 0; Spown < Spownlevel; Spown++)
 		{
 			float frandPos = (float)(rand() % SPOWN_RAND_POSX + 1);
+			float frandSpeed = (float)(rand() % SPOWN_RAND_SPEED + 1);
 
 			CFire::Create
 			(
 				CFire::EType::TYPE_NORMAL,
-				1.0f,
+				0.5f + ((frandSpeed - ((float)SPOWN_RAND_SPEED * 0.5f)) * 0.1f),
 				D3DXVECTOR3
 				(
 					frandPos - ((float)SPOWN_RAND_POSX * 0.5f),

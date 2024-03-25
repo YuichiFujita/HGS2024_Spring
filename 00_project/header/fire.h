@@ -59,6 +59,9 @@ public:
 	void SetMovePosition(const D3DXVECTOR3& rMove);	// 位置移動量設定
 	D3DXVECTOR3 GetMovePosition(void) const;		// 位置移動量取得
 
+	void SetMoveSpeed(const float& fSpeed) { m_fSpeed = fSpeed; }	// 速度設定
+	float GetMoveSpeed(void) { return m_fSpeed; }					// 速度取得
+
 protected:
 	// 純粋仮想関数
 	virtual void UpdateMove(void) = 0;	// 挙動の更新
