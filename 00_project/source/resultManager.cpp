@@ -41,18 +41,18 @@ namespace
 
 	const float ADD_ALPHA = 0.008f;	// α値の加算量
 
-	const D3DXVECTOR3 POS_SCORE_LOGO = D3DXVECTOR3(340.0f, 150.0f, 0.0f);	// リザルト表示の遅刻回避の位置
+	const D3DXVECTOR3 POS_SCORE_LOGO = D3DXVECTOR3(340.0f, 250.0f, 0.0f);	// リザルト表示の遅刻回避の位置
 	const D3DXVECTOR3 SIZE_SCORE_LOGO = D3DXVECTOR3(500.0f * 0.9f, 150.0f * 0.9f, 0.0f);	// リザルト表示の大きさ
-	const D3DXVECTOR3 POS_SCORE = D3DXVECTOR3(590.0f, 150.0f, 0.0f);	// タイム位置
+	const D3DXVECTOR3 POS_SCORE = D3DXVECTOR3(590.0f, 250.0f, 0.0f);	// タイム位置
 	const D3DXVECTOR3 SIZE_SCORE = D3DXVECTOR3(98.0f, 117.0f, 0.0f);		// タイム数字大きさ
 	const D3DXVECTOR3 SPACE_SCORE = D3DXVECTOR3(SIZE_SCORE.x * 0.85f, 0.0f, 0.0f);	// タイム数字空白
 
 	const float SET_SCORE_SCALE = 8.0f;		// リザルト表示の初期拡大率
 	const float SUB_SCORE_SCALE = 0.65f;	// リザルト表示拡大率の減算量
 
-	const D3DXVECTOR3 POS_TIME_LOGO = D3DXVECTOR3(280.0f, 330.0f, 0.0f);	// タイムロゴ位置
+	const D3DXVECTOR3 POS_TIME_LOGO = D3DXVECTOR3(280.0f, 480.0f, 0.0f);	// タイムロゴ位置
 	const D3DXVECTOR3 SIZE_TIME_LOGO = D3DXVECTOR3(487.5f * 0.9f, 154.7f * 0.9f, 0.0f);	// タイムロゴ大きさ
-	const D3DXVECTOR3 POS_TIME = D3DXVECTOR3(590.0f, 330.0f, 0.0f);	// タイム位置
+	const D3DXVECTOR3 POS_TIME = D3DXVECTOR3(590.0f, 480.0f, 0.0f);	// タイム位置
 	const D3DXVECTOR3 SIZE_TIME_VAL = D3DXVECTOR3(98.0f, 117.0f, 0.0f);		// タイム数字大きさ
 	const D3DXVECTOR3 SIZE_TIME_PART = D3DXVECTOR3(50.0f, 117.0f, 0.0f);		// タイム区切り大きさ
 	const D3DXVECTOR3 SPACE_TIME_VAL = D3DXVECTOR3(SIZE_TIME_VAL.x * 0.85f, 0.0f, 0.0f);	// タイム数字空白
@@ -428,21 +428,8 @@ void CResultManager::Update(void)
 		if (UpdateDrawWait(CONT_WAIT_CNT))
 		{ // 待機完了の場合
 
-			// コンテニュー表示の拡大率を設定
-			m_fScale = SET_CONT_SCALE;
-
-			// コンテニューロゴ表示の描画開始
-			m_pContLogo->SetEnableDraw(true);
-
-			for (int nCntResult = 0; nCntResult < SELECT_MAX; nCntResult++)
-			{ // 選択肢の総数分繰り返す
-
-				// コンテニュー表示の描画開始
-				m_apContinue[nCntResult]->SetEnableDraw(true);
-			}
-
 			// 状態を変更
-			m_state = STATE_CONTINUE;	// コンテニュー表示状態
+			m_state = STATE_WAIT;	// コンテニュー表示状態
 		}
 
 		break;
@@ -456,8 +443,8 @@ void CResultManager::Update(void)
 
 	case STATE_WAIT:	// 遷移待機状態
 
-		// 選択の更新
-		UpdateSelect();
+		// 遷移決定の更新
+		UpdateTransition();
 
 		break;
 
@@ -469,15 +456,15 @@ void CResultManager::Update(void)
 	// 遷移決定の更新
 	UpdateTransition();
 
-	for (int nCntResult = 0; nCntResult < SELECT_MAX; nCntResult++)
-	{ // 選択肢の総数分繰り返す
+	//for (int nCntResult = 0; nCntResult < SELECT_MAX; nCntResult++)
+	//{ // 選択肢の総数分繰り返す
 
-		// コンテニュー表示の更新
-		m_apContinue[nCntResult]->Update();
-	}
+	//	// コンテニュー表示の更新
+	//	m_apContinue[nCntResult]->Update();
+	//}
 
-	// コンテニューロゴ表示の更新
-	m_pContLogo->Update();
+	//// コンテニューロゴ表示の更新
+	//m_pContLogo->Update();
 
 	// すこあロゴ表示の更新
 	m_pScoreLogo->Update();
@@ -753,24 +740,10 @@ void CResultManager::UpdateTransition(void)
 			if (GET_MANAGER->GetFade()->GetState() == CFade::FADE_NONE)
 			{ // フェード中ではない場合
 
-				switch (m_nSelect)
-				{ // 選択ごとの処理
-				case SELECT_YES:
-
 					// シーンの設定
-					GET_MANAGER->SetScene(CScene::MODE_GAME);	// ゲーム画面
+				GET_MANAGER->SetScene(CScene::MODE_RANKING);	// ランキング画面
 
-					break;
-
-				case SELECT_NO:
-
-					// シーンの設定
-					GET_MANAGER->SetScene(CScene::MODE_RANKING);	// ランキング画面
-
-					break;
-				}
-
-				// サウンドの再生
+			// サウンドの再生
 				PLAY_SOUND(CSound::LABEL_SE_DECISION_000);	// 決定音00
 			}
 		}
@@ -795,21 +768,21 @@ void CResultManager::SkipStaging(void)
 	m_pTime->SetSizingValue(SIZE_TIME_VAL);
 	m_pTime->SetSizingPart(SIZE_TIME_PART);
 
-	// コンテニューロゴ表示の描画開始
-	m_pContLogo->SetEnableDraw(true);
+	//// コンテニューロゴ表示の描画開始
+	//m_pContLogo->SetEnableDraw(true);
 
-	// コンテニューロゴ表示の大きさを設定
-	m_pContLogo->SetVec3Sizing(SIZE_CONT_LOGO);
+	//// コンテニューロゴ表示の大きさを設定
+	//m_pContLogo->SetVec3Sizing(SIZE_CONT_LOGO);
 
-	for (int nCntResult = 0; nCntResult < SELECT_MAX; nCntResult++)
-	{ // 選択肢の総数分繰り返す
+	//for (int nCntResult = 0; nCntResult < SELECT_MAX; nCntResult++)
+	//{ // 選択肢の総数分繰り返す
 
-		// コンテニュー表示の描画開始
-		m_apContinue[nCntResult]->SetEnableDraw(true);
+	//	// コンテニュー表示の描画開始
+	//	m_apContinue[nCntResult]->SetEnableDraw(true);
 
-		// コンテニュー表示の大きさを設定
-		m_apContinue[nCntResult]->SetVec3Sizing(SIZE_CONT);
-	}
+	//	// コンテニュー表示の大きさを設定
+	//	m_apContinue[nCntResult]->SetVec3Sizing(SIZE_CONT);
+	//}
 
 	// フェードの透明度を設定
 	m_pFade->SetColor(SETCOL_FADE);
