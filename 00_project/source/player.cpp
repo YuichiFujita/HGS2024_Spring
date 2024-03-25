@@ -13,6 +13,7 @@
 #include "effect3D.h"
 #include "sceneGame.h"
 #include "multiValue.h"
+#include "bullet.h"
 
 //************************************************************
 //	定数宣言
@@ -25,8 +26,9 @@ namespace
 	};
 	const int PRIORITY = 3;	// モデル文字の優先順位
 
-	const float ROT_MOVE = 0.02f;
+	const float ROT_MOVE = 0.03f;
 	const float SHOT_POAER_PULS = 1.0f;
+	const float DEF_SHOTPOWER = 10.0f;
 }
 
 //************************************************************
@@ -42,7 +44,7 @@ static_assert(NUM_ARRAY(MODEL_FILE) == CPlayer::TYPE_MAX, "ERROR : Type Count Mi
 //============================================================
 CPlayer::CPlayer() : CObjectModel(CObject::LABEL_UI, CObject::DIM_3D, PRIORITY)
 {
-	ShotPower = 0;
+	ShotPower = DEF_SHOTPOWER;
 }
 
 //============================================================
@@ -152,6 +154,11 @@ void CPlayer::UpdateShot()
 	{
 		ShotPower += SHOT_POAER_PULS;
 
+		if (ShotPower > 50.0f)
+		{
+			ShotPower = 50.0f;
+		}
+
 		for (int nCntEffect = 0; nCntEffect < 10; nCntEffect++)
 		{
 			Pos.x += (sinf(-Rot.z) * (ShotPower * 0.1f) * nCntEffect);
@@ -163,9 +170,15 @@ void CPlayer::UpdateShot()
 
 	if (GET_INPUTKEY->IsRelease(DIK_SPACE) == true)
 	{
-		CEffect3D::Create(D3DXVECTOR3((sinf(-Rot.z) * 80.0f) + Pos.x, (cosf(Rot.z) * 80.0f) + Pos.y, Pos.z), 10.0f, CEffect3D::EType::TYPE_NORMAL, 60,D3DXVECTOR3(sinf(-Rot.z) * ShotPower, cosf(Rot.z) * ShotPower, 0.0f));
+		CBullet::Create
+		(
+			D3DXVECTOR3((sinf(-Rot.z) * 80.0f) + Pos.x, (cosf(Rot.z) * 80.0f) + Pos.y, Pos.z), 
+			50.0f,
+			CEffect3D::EType::TYPE_BUBBLE,
+			60,
+			D3DXVECTOR3(sinf(-Rot.z) * ShotPower, cosf(Rot.z) * ShotPower, 0.0f));
 
-		ShotPower = 0;
+		ShotPower = DEF_SHOTPOWER;
 
 		////スコア確認のデバッグ
 		//CMultiValue *pScore = CSceneGame::GetScoreUI();

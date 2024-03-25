@@ -14,10 +14,12 @@
 //	インクルードファイル
 //************************************************************
 #include "object.h"
+#include "effect3D.h"
 
 //************************************************************
 //	前方宣言
 //************************************************************
+class CEffect3D;
 
 //************************************************************
 //	クラス定義
@@ -39,16 +41,27 @@ public:
 	void Draw(CShader *pShader = nullptr) override;	// 描画
 
 	// 静的メンバ関数
-	static CBullet *Create(const D3DXVECTOR3& rPos, const D3DXVECTOR3& rRot);	// 生成
+	static CBullet *Create
+	(
+		const D3DXVECTOR3& rPos,		// 位置
+		const float			fRadius,	// 半径
+		const CEffect3D::EType	type,	// テクスチャ
+		const int			nLife,			// 寿命
+		const D3DXVECTOR3& rMove	// 移動量
+	);	// 生成
 
 private:
 	// オーバーライド関数
 	void Release(void) override;	// 破棄
+	void CollisionFire();
 
 	// メンバ変数
 	D3DXVECTOR3	m_pos;	// 位置
 	D3DXVECTOR3	m_move;	// 移動量
 	D3DXVECTOR3	m_rot;	// 移動量
+	float	m_Radius;	// 移動量
+	CEffect3D::EType	m_type;	// テクスチャ
+	int		m_nLife;			// 寿命
 };
 
 #endif	// _FLOWER_H_
