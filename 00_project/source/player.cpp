@@ -11,6 +11,8 @@
 #include "manager.h"
 #include "model.h"
 #include "effect3D.h"
+#include "sceneGame.h"
+#include "multiValue.h"
 
 //************************************************************
 //	定数宣言
@@ -68,7 +70,8 @@ HRESULT CPlayer::Init(void)
 	CObjectModel *pModel = CObjectModel::Create(GetVec3Position(), VEC3_ZERO);
 	pModel->SetLabel(CObject::LABEL_PLAYER);
 	pModel->BindModel(GET_MANAGER->GetModel()->Regist("data\\MODEL\\PLAYER\\housu.x"));
-	pModel->SetVec3Position(D3DXVECTOR3(0.0f, 75.0f, 0.0f));
+	pModel->SetVec3Position(D3DXVECTOR3(0.0f, 150.0f, 0.0f));
+	pModel->SetVec3Scaling(D3DXVECTOR3(3.0f, 3.0f, 3.0f));
 
 	// 成功を返す
 	return S_OK;
@@ -162,6 +165,11 @@ void CPlayer::UpdateShot()
 		CEffect3D::Create(Pos, 10.0f, CEffect3D::EType::TYPE_NORMAL, 60,D3DXVECTOR3(sinf(-Rot.z) * ShotPower, cosf(Rot.z) * ShotPower, 0.0f));
 
 		ShotPower = 0;
+
+
+		//スコア確認のデバッグ
+		//CMultiValue *pScore = CSceneGame::GetScoreUI();
+		//pScore->AddNum(1);
 	}
 }
 

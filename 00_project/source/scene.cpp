@@ -55,7 +55,7 @@ HRESULT CScene::Init(void)
 	m_pStage = CStage::Create(m_mode);
 
 	// ÉvÉåÉCÉÑÅ[ÇÃê∂ê¨
-	m_pPlayer = CPlayer::Create(CPlayer::EType::TYPE_BOSS_NAME,D3DXVECTOR3(0.0f,75.0f,0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+	m_pPlayer = CPlayer::Create(CPlayer::EType::TYPE_BOSS_NAME,D3DXVECTOR3(0.0f,150.0f,0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(3.0f, 3.0f, 3.0f));
 
 	// ê¨å˜Çï‘Ç∑
 	return S_OK;

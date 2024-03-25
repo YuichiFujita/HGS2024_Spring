@@ -18,6 +18,7 @@
 #include "camera.h"
 #include "player.h"
 #include "multiModel.h"
+#include "effect3D.h"
 
 //************************************************************
 //	定数宣言
@@ -25,6 +26,10 @@
 namespace
 {
 	const int GAMEEND_WAIT_FRAME = 180;	// リザルト画面への遷移余韻フレーム
+
+	const int SPOWN_NUM = 2;	// 初期の生成数
+	const int SPOWN_RAND_POSX = 100;	// 幅のランダム生成範囲
+	const float SPOWN_POSY = 500.0f;	// 幅のランダム生成範囲
 }
 
 //************************************************************
@@ -58,6 +63,12 @@ HRESULT CGameManager::Init(void)
 	// メンバ変数を初期化
 	m_state = STATE_NORMAL;	// 状態
 
+	//生成レベルを初期化
+	Spownlevel = SPOWN_NUM;
+
+	//生成カウントを初期化
+	SpownCount = 0;
+
 	//// プレイヤーを出現させる
 	//pPlayer->SetSpawn();
 
@@ -81,14 +92,56 @@ void CGameManager::Update(void)
 	switch (m_state)
 	{ // 状態ごとの処理
 	case STATE_NONE:
-	case STATE_NORMAL:
 	case STATE_STAGING:
+		break;
+
+	case STATE_NORMAL:
+		SpownManager();
 		break;
 
 	default:	// 例外処理
 		assert(false);
 		break;
 	}
+}
+
+//============================================================
+//	敵生成の管理
+//============================================================
+void CGameManager::SpownManager()
+{
+	SpownCount++;
+
+	//レベル管理
+	if (SpownCount != 0 && SpownCount % 1200 == 0)
+	{
+		Spownlevel++;
+	}
+
+	//敵生成管理
+	if (SpownCount % 300 == 0)
+	{
+		for (int Spown = 0; Spown < Spownlevel; Spown++)
+		{
+			float frandPos = (float)(rand() % SPOWN_RAND_POSX + 1);
+
+			CEffect3D::Create
+			(
+				D3DXVECTOR3
+				(
+					frandPos - ((float)SPOWN_RAND_POSX * 0.5f),
+					SPOWN_POSY,
+					0.0f
+				),
+				10.0f,
+				CEffect3D::EType::TYPE_NORMAL,
+				300,
+				D3DXVECTOR3(0.0f, -1.0f, 0.0f)
+			);
+		}
+	}
+
+
 }
 
 //============================================================

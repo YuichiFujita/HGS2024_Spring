@@ -25,10 +25,9 @@ public:
 	// ƒƒS—ñ‹“
 	enum ELogo
 	{
-		LOGO_NEVER = 0,	// NEVERƒƒS
-		LOGO_GIVE,		// GIVEƒƒS
-		LOGO_UP,		// UP!ƒƒS
-		LOGO_MAX		// ‚±‚Ì—ñ‹“Œ^‚Ì‘”
+		LOGO_DEFENSE = 0,	// DEFENSEƒƒS
+		LOGO_FLOWER,		// FLOWERƒƒS
+		LOGO_MAX			// ‚±‚Ì—ñ‹“Œ^‚Ì‘”
 	};
 
 	// ‘I‘ð—ñ‹“
