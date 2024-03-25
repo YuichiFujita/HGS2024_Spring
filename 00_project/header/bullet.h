@@ -13,30 +13,21 @@
 //************************************************************
 //	インクルードファイル
 //************************************************************
-#include "main.h"
-#include "effect3D.h"
+#include "object.h"
 
 //************************************************************
 //	前方宣言
 //************************************************************
-class CShadow;	// 影クラス
 
 //************************************************************
 //	クラス定義
 //************************************************************
-// 花クラス
-class CBullet : public CEffect3D
+// 弾クラス
+class CBullet : public CObject
 {
 public:
-	enum EState
-	{
-		NONE = 0,	// 何もしない
-		SPAWN,		// スポーン
-		MAX			// この列挙の総数
-	};
-
 	// コンストラクタ
-	CBullet();
+	explicit CBullet();
 
 	// デストラクタ
 	~CBullet();
@@ -49,12 +40,15 @@ public:
 
 	// 静的メンバ関数
 	static CBullet *Create(const D3DXVECTOR3& rPos, const D3DXVECTOR3& rRot);	// 生成
-	//static void RandomSpawn(const int nNum);	// ランダム生成
 
 private:
+	// オーバーライド関数
+	void Release(void) override;	// 破棄
+
 	// メンバ変数
-	CShadow *m_pShadow;	// 影の情報
-	EState m_state;		// 状態
+	D3DXVECTOR3	m_pos;	// 位置
+	D3DXVECTOR3	m_move;	// 移動量
+	D3DXVECTOR3	m_rot;	// 移動量
 };
 
 #endif	// _FLOWER_H_
