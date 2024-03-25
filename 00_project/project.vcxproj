@@ -166,6 +166,8 @@
     <ClInclude Include="header\fade.h" />
     <ClInclude Include="header\field.h" />
     <ClInclude Include="header\fire.h" />
+    <ClInclude Include="header\fireFast.h" />
+    <ClInclude Include="header\fireFluffy.h" />
     <ClInclude Include="header\fireNormal.h" />
     <ClInclude Include="header\flash.h" />
     <ClInclude Include="header\flower.h" />
@@ -251,6 +253,8 @@
     <ClCompile Include="source\fade.cpp" />
     <ClCompile Include="source\field.cpp" />
     <ClCompile Include="source\fire.cpp" />
+    <ClCompile Include="source\fireFast.cpp" />
+    <ClCompile Include="source\fireFluffy.cpp" />
     <ClCompile Include="source\fireNormal.cpp" />
     <ClCompile Include="source\flash.cpp" />
     <ClCompile Include="source\flower.cpp" />

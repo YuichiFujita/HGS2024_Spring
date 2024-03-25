@@ -25,10 +25,12 @@ public:
 	// 状態列挙
 	enum EState
 	{
-		STATE_NONE = 0,	// 何もしない状態
-		STATE_NORMAL,	// 通常状態
-		STATE_STAGING,	// 演出状態
-		STATE_MAX		// この列挙型の総数
+		STATE_NONE = 0,		// 何もしない状態
+		STATE_NORMAL,		// 通常状態
+		STATE_INIT_BURN,	// 全焼初期化状態
+		STATE_BURN,			// 全焼状態
+		STATE_STAGING,		// 演出状態
+		STATE_MAX			// この列挙型の総数
 	};
 
 	// コンストラクタ
@@ -41,7 +43,7 @@ public:
 	HRESULT Init(void);	// 初期化
 	void Uninit(void);	// 終了
 	void Update(void);	// 更新
-	void SetState(const EState state);	// 状態設定
+	void SetBurn(void);	// 全焼状態設定
 	EState GetState(void) const;		// 状態取得
 	void TransitionResult(const CRetentionManager::EWin win);	// リザルト画面遷移
 
@@ -51,7 +53,9 @@ public:
 
 private:
 	// メンバ関数
-	void SpownManager(void);				//敵生成の管理
+	void SpownManager(void);	// 敵生成の管理
+	void InitBurnManager(void);	// 全焼演出の初期化管理
+	void BurnManager(void);		// 全焼演出の管理
 
 	// メンバ変数
 	EState m_state;	// 状態

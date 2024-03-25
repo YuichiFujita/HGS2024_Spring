@@ -20,6 +20,9 @@
 #include "multiModel.h"
 #include "effect3D.h"
 #include "fire.h"
+#include "hitStop.h"
+#include "flash.h"
+#include "wave.h"
 
 //************************************************************
 //	定数宣言
@@ -29,8 +32,9 @@ namespace
 	const int GAMEEND_WAIT_FRAME = 180;	// リザルト画面への遷移余韻フレーム
 
 	const int SPOWN_NUM = 2;	// 初期の生成数
-	const int SPOWN_RAND_POSX = 300;	// 幅のランダム生成範囲
-	const float SPOWN_POSY = 1000.0f;	// 幅のランダム生成範囲
+	const int SPOWN_RAND_POSX = 1200;	// 幅のランダム生成範囲
+	const float SPOWN_POSY = 1000.0f;	// 生成の高さ
+	const int SPOWN_RAND_SPEED = 90;	// 生成時の炎の速度のランダム範囲
 }
 
 //************************************************************
@@ -58,9 +62,6 @@ CGameManager::~CGameManager()
 //============================================================
 HRESULT CGameManager::Init(void)
 {
-	//// ポインタを宣言
-	//CPlayer *pPlayer = CScene::GetPlayer();	// プレイヤーの情報
-
 	// メンバ変数を初期化
 	m_state = STATE_NORMAL;	// 状態
 
@@ -69,9 +70,6 @@ HRESULT CGameManager::Init(void)
 
 	//生成カウントを初期化
 	SpownCount = 0;
-
-	//// プレイヤーを出現させる
-	//pPlayer->SetSpawn();
 
 	// 成功を返す
 	return S_OK;
@@ -96,6 +94,20 @@ void CGameManager::Update(void)
 	case STATE_STAGING:
 		break;
 
+	case STATE_INIT_BURN:
+
+		// 全焼演出の初期化の管理
+		InitBurnManager();
+
+		break;
+
+	case STATE_BURN:
+
+		// 全焼演出の管理
+		BurnManager();
+
+		break;
+
 	case STATE_NORMAL:
 		SpownManager();
 		break;
@@ -104,6 +116,29 @@ void CGameManager::Update(void)
 		assert(false);
 		break;
 	}
+}
+
+//============================================================
+//	全焼状態の設定
+//============================================================
+void CGameManager::SetBurn(void)
+{
+	// カメラ揺れを設定
+	GET_MANAGER->GetCamera()->SetSwing(CCamera::TYPE_MAIN, CCamera::SSwing(10.0f, 1.5f, 0.3f));
+
+	// ヒットストップを設定
+	CSceneGame::GetHitStop()->SetStop(45);
+
+	// フラッシュを設定
+	CSceneGame::GetFlash()->Set(0.55f, 0.08f);
+
+	// 炎を削除
+	std::vector<CObject::ELabel> delVector;
+	delVector.push_back(CObject::LABEL_FIRE);
+	CObject::ReleaseAll(delVector);
+
+	// 全焼初期化状態にする
+	m_state = STATE_INIT_BURN;
 }
 
 //============================================================
@@ -125,18 +160,66 @@ void CGameManager::SpownManager()
 		for (int Spown = 0; Spown < Spownlevel; Spown++)
 		{
 			float frandPos = (float)(rand() % SPOWN_RAND_POSX + 1);
+			float frandSpeed = (float)(rand() % SPOWN_RAND_SPEED + 1);
+			int nRandFire = 0;
 
-			CFire::Create
-			(
-				CFire::EType::TYPE_NORMAL,
-				1.0f,
-				D3DXVECTOR3
+			if (Spownlevel >= 5)
+			{
+				nRandFire = rand() % 3;
+			}
+			else if (Spownlevel >= 4)
+			{
+				nRandFire = rand() % 2;
+			}
+			else
+			{
+				nRandFire = rand() % 1;
+			}
+
+			switch (nRandFire)
+			{
+			case 0:
+				CFire::Create
 				(
-					frandPos - ((float)SPOWN_RAND_POSX * 0.5f),
-					SPOWN_POSY,
-					0.0f
-				)
-			);
+					CFire::EType::TYPE_NORMAL,
+					1.0f + ((frandSpeed - ((float)SPOWN_RAND_SPEED * 0.5f)) * 0.01f),
+					D3DXVECTOR3
+					(
+						frandPos - ((float)SPOWN_RAND_POSX * 0.5f),
+						SPOWN_POSY,
+						0.0f
+					)
+				);
+				break;
+			case 1:
+				CFire::Create
+				(
+					CFire::EType::TYPE_FLUFFY,
+					1.0f + ((frandSpeed - ((float)SPOWN_RAND_SPEED * 0.5f)) * 0.01f),
+					D3DXVECTOR3
+					(
+						frandPos - ((float)SPOWN_RAND_POSX * 0.5f),
+						SPOWN_POSY,
+						0.0f
+					)
+				);
+				break;
+			case 2:
+				CFire::Create
+				(
+					CFire::EType::TYPE_FAST,
+					1.0f + ((frandSpeed - ((float)SPOWN_RAND_SPEED * 0.5f)) * 0.01f),
+					D3DXVECTOR3
+					(
+						frandPos - ((float)SPOWN_RAND_POSX * 0.5f),
+						SPOWN_POSY,
+						0.0f
+					)
+				);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -144,12 +227,29 @@ void CGameManager::SpownManager()
 }
 
 //============================================================
-//	状態設定処理
+//	全焼演出の初期化の管理
 //============================================================
-void CGameManager::SetState(const EState state)
+void CGameManager::InitBurnManager(void)
 {
-	// 状態を設定
-	m_state = state;
+	if (!CSceneGame::GetHitStop()->IsStop())
+	{ // ヒットストップが終わったら
+
+		// 
+		CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 120.0f, 0.0f), VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(70.0f, 14.0f, 0.02f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
+		CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 90.0f, 0.0f),  VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(40.0f, 12.0f, 0.03f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
+		CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 60.0f, 0.0f),  VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(10.0f, 10.0f, 0.04f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
+
+		// 全焼開始
+		m_state = STATE_BURN;
+	}
+}
+
+//============================================================
+//	全焼演出の管理
+//============================================================
+void CGameManager::BurnManager(void)
+{
+
 }
 
 //============================================================

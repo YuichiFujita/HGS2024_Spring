@@ -51,7 +51,7 @@ CTimerUI		*CSceneGame::m_pTimerUI		= nullptr;	// タイマーUI
 CCinemaScope	*CSceneGame::m_pCinemaScope	= nullptr;	// シネマスコープ
 CPause			*CSceneGame::m_pPause		= nullptr;	// ポーズ
 CHitStop		*CSceneGame::m_pHitStop		= nullptr;	// ヒットストップ
-CFlash			* CSceneGame::m_pFlash		= nullptr;	// フラッシュ
+CFlash			*CSceneGame::m_pFlash		= nullptr;	// フラッシュ
 CMultiValue		*CSceneGame::m_pScoreUI		= nullptr;	// スコア
 
 //************************************************************
@@ -89,8 +89,8 @@ HRESULT CSceneGame::Init(void)
 		CValue::ETexture::TEXTURE_NORMAL,
 		0,
 		3,
-		D3DXVECTOR3(55.0f, 43.5f, 0.0f),				// 位置
-		timerInfo::VAL_SIZE,		// 数字の大きさ
+		D3DXVECTOR3(55.0f, 43.5f, 0.0f),	// 位置
+		timerInfo::VAL_SIZE,				// 数字の大きさ
 		D3DXVECTOR3(40.0f, 0.0f, 0.0f)		// 区切りの大きさ
 	);
 
@@ -291,6 +291,10 @@ void CSceneGame::Update(void)
 	if (GET_INPUTKEY->IsTrigger(DIK_8))
 	{
 		CFire::Create(CFire::TYPE_NORMAL, 1.0f, D3DXVECTOR3(0.0f, 600.0f, 0.0f));
+	}
+	if (GET_INPUTKEY->IsTrigger(DIK_7))
+	{
+		m_pGameManager->SetBurn();
 	}
 }
 

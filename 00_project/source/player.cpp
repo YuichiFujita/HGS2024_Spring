@@ -23,7 +23,7 @@ namespace
 	{
 		"data\\MODEL\\PLAYER\\pump.x",	// ボスの名前
 	};
-	const int PRIORITY = 5;	// モデル文字の優先順位
+	const int PRIORITY = 3;	// モデル文字の優先順位
 
 	const float ROT_MOVE = 0.02f;
 	const float SHOT_POAER_PULS = 1.0f;
@@ -157,16 +157,15 @@ void CPlayer::UpdateShot()
 			Pos.x += (sinf(-Rot.z) * (ShotPower * 0.1f) * nCntEffect);
 			Pos.y += (cosf(Rot.z) * (ShotPower * 0.1f) * nCntEffect);
 
-			CEffect3D::Create(Pos, 10.0f, CEffect3D::EType::TYPE_NORMAL, 2);
+			CEffect3D::Create(D3DXVECTOR3((sinf(-Rot.z) * 80.0f) + Pos.x, (cosf(Rot.z) * 80.0f) + Pos.y,Pos.z), 10.0f, CEffect3D::EType::TYPE_NORMAL, 2);
 		}
 	}
 
 	if (GET_INPUTKEY->IsRelease(DIK_SPACE) == true)
 	{
-		CEffect3D::Create(Pos, 10.0f, CEffect3D::EType::TYPE_NORMAL, 60,D3DXVECTOR3(sinf(-Rot.z) * ShotPower, cosf(Rot.z) * ShotPower, 0.0f));
+		CEffect3D::Create(D3DXVECTOR3((sinf(-Rot.z) * 80.0f) + Pos.x, (cosf(Rot.z) * 80.0f) + Pos.y, Pos.z), 10.0f, CEffect3D::EType::TYPE_NORMAL, 60,D3DXVECTOR3(sinf(-Rot.z) * ShotPower, cosf(Rot.z) * ShotPower, 0.0f));
 
 		ShotPower = 0;
-
 
 		////スコア確認のデバッグ
 		//CMultiValue *pScore = CSceneGame::GetScoreUI();
