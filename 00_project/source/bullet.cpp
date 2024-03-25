@@ -89,6 +89,19 @@ void CBullet::Update(void)
 	(
 		m_pos,
 		m_Radius,
+		CEffect3D::TYPE_SMOKE,
+		LIFE,
+		VEC3_ZERO,
+		m_rot,
+		D3DXCOLOR(0.0f, 0.0f, 0.2f, 1.0f),
+		0.0f,
+		CRenderState::BLEND_NORMAL
+	);
+
+	CEffect3D::Create
+	(
+		m_pos,
+		m_Radius,
 		m_type,
 		LIFE,
 		VEC3_ZERO,

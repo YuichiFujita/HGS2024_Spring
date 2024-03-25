@@ -36,6 +36,7 @@ public:
 		TYPE_HEAL,				// 回復
 		TYPE_STOMP_PLANT,		// 植物踏みつぶし
 		TYPE_FIRE,				// 炎
+		TYPE_WATER,				// 水
 		TYPE_SMALL_EXPLOSION,	// 小爆発
 		TYPE_BIG_EXPLOSION,		// 大爆発
 		TYPE_PLAYER_DAMAGE,		// プレイヤーダメージ
@@ -72,6 +73,7 @@ private:
 	void StompPlant(const D3DXVECTOR3& rPos, const D3DXCOLOR& rCol);	// 植物踏みつぶし
 
 	void Fire(const D3DXVECTOR3& rPos);				// 炎
+	void Water(const D3DXVECTOR3& rPos);			// 水
 	void SmallExplosion(const D3DXVECTOR3& rPos);	// 小爆発
 	void BigExplosion(const D3DXVECTOR3& rPos);		// 大爆発
 	void PlayerDamage(const D3DXVECTOR3& rPos);		// プレイヤーダメージ

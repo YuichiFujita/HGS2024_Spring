@@ -23,6 +23,7 @@ namespace
 		1,	// 回復
 		1,	// 植物踏みつぶし
 		1,	// 炎
+		1,	// 水
 		1,	// 小爆発
 		1,	// 大爆発
 		1,	// プレイヤーダメージ
@@ -69,6 +70,24 @@ namespace
 		const int	SUB_RAD_RAND	= 30;	// 炎の半径の減算の値
 		const int	DIV_SUBRAD_RAND	= 4;	// 炎の半径の減算量の剰余算の値
 		const float	MUL_SUBRAD_RAND	= 1.5f;	// 炎の半径の減算量の減算の値
+	}
+	
+	// 水
+	namespace water
+	{
+		const CRenderState::EBlend BLEND = CRenderState::BLEND_ADD;	// 水のαブレンド
+		const D3DXCOLOR COL = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);	// 水の色
+
+		const float	POSGAP		= 10.0f;	// 水の位置ずれ量
+		const float	MOVE		= -1.0f;	// 水の移動量
+		const int	SPAWN		= 3;		// 水の生成数
+		const int	EFF_LIFE	= 5;		// 水の寿命
+		const float	INIT_RAD	= 80.0f;	// 水の半径
+		const float	INIT_SUBRAD	= 0.8f;		// 水の半径の減算量
+		const int	DIV_RAD_RAND	= 61;	// 水の半径の剰余算の値
+		const int	SUB_RAD_RAND	= 30;	// 水の半径の減算の値
+		const int	DIV_SUBRAD_RAND	= 4;	// 水の半径の減算量の剰余算の値
+		const float	MUL_SUBRAD_RAND	= 1.5f;	// 水の半径の減算量の減算の値
 	}
 
 	// 小爆発
@@ -262,6 +281,13 @@ void CParticle3D::Update(void)
 
 		// 炎
 		Fire(m_pos);
+
+		break;
+
+	case TYPE_WATER:
+
+		// 水
+		Water(m_pos);
 
 		break;
 
@@ -632,6 +658,90 @@ void CParticle3D::Fire(const D3DXVECTOR3& rPos)
 			fire::COL,				// 色
 			fSubRad,				// 半径の減算量
 			fire::BLEND,			// 加算合成状況
+			LABEL_PARTICLE			// オブジェクトラベル
+		);
+	}
+}
+
+//============================================================
+//	水
+//============================================================
+void CParticle3D::Water(const D3DXVECTOR3& rPos)
+{
+	// 変数を宣言
+	D3DXVECTOR3	pos = VEC3_ZERO;	// 位置の代入用
+	D3DXVECTOR3	move = VEC3_ZERO;	// 移動量の代入用
+	D3DXVECTOR3	rot = VEC3_ZERO;	// 向きの代入用
+	float		fRadius = 0.0f;		// 半径の代入用
+	float		fSubRad = 0.0f;		// 半径減算量の代入用
+
+	for (int i = 0; i < 2; i++)
+	{
+		// 位置をランダムに設定
+		float fRotX = useful::RandomRot();	// ランダム仰角
+		float fRotY = useful::RandomRot();	// ランダム方位角
+		pos.x = rPos.x + water::POSGAP * sinf(fRotX) * sinf(fRotY);
+		pos.y = rPos.y + water::POSGAP * cosf(fRotX);
+		pos.z = rPos.z + water::POSGAP * sinf(fRotX) * cosf(fRotY);
+
+		// 向きを設定
+		rot.z = useful::RandomRot();
+
+		// 半径を設定
+		fRadius = water::INIT_RAD + (float)(rand() % water::DIV_RAD_RAND - water::SUB_RAD_RAND) + 38.0f;
+
+		// エフェクト3Dオブジェクトの生成
+		CEffect3D::Create
+		( // 引数
+			pos,						// 位置
+			fRadius,					// 半径
+			CEffect3D::TYPE_SMOKE,		// テクスチャ
+			water::EFF_LIFE,				// 寿命
+			VEC3_ZERO,					// 移動量
+			rot,						// 向き
+			water::COL,					// 色
+			0.0f,						// 半径の減算量
+			CRenderState::BLEND_NORMAL,	// 加算合成状況
+			LABEL_PARTICLE				// オブジェクトラベル
+		);
+	}
+
+	for (int nCntPart = 0; nCntPart < water::SPAWN; nCntPart++)
+	{ // 生成されるエフェクト数分繰り返す
+
+		// 位置をランダムに設定
+		float fRotX = useful::RandomRot();	// ランダム仰角
+		float fRotY = useful::RandomRot();	// ランダム方位角
+		pos.x = rPos.x + water::POSGAP * sinf(fRotX) * sinf(fRotY);
+		pos.y = rPos.y + water::POSGAP * cosf(fRotX);
+		pos.z = rPos.z + water::POSGAP * sinf(fRotX) * cosf(fRotY);
+
+		// 移動量を設定
+		move.x = water::MOVE * sinf(fRotX) * sinf(fRotY);
+		move.y = water::MOVE * cosf(fRotX);
+		move.z = water::MOVE * sinf(fRotX) * cosf(fRotY);
+
+		// 向きを設定
+		rot.z = useful::RandomRot();
+
+		// 半径を設定
+		fRadius = water::INIT_RAD + (float)(rand() % water::DIV_RAD_RAND - water::SUB_RAD_RAND);
+
+		// 半径減算量を設定
+		fSubRad = water::INIT_SUBRAD + rand() % water::DIV_SUBRAD_RAND * water::MUL_SUBRAD_RAND;
+
+		// エフェクト3Dオブジェクトの生成
+		CEffect3D::Create
+		( // 引数
+			pos,					// 位置
+			fRadius,				// 半径
+			CEffect3D::TYPE_FIRE,	// テクスチャ
+			water::EFF_LIFE,			// 寿命
+			move,					// 移動量
+			rot,					// 向き
+			water::COL,				// 色
+			fSubRad,				// 半径の減算量
+			water::BLEND,			// 加算合成状況
 			LABEL_PARTICLE			// オブジェクトラベル
 		);
 	}
