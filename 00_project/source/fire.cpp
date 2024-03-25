@@ -160,6 +160,20 @@ CFire *CFire::Create
 
 		break;
 
+	case TYPE_FLUFFY:
+
+		// ^‚Á’¼‚®‰Š‚ğ¶¬
+		pFire = new CFireNormal(type);
+
+		break;
+
+	case TYPE_FAST:
+
+		// ^‚Á’¼‚®‰Š‚ğ¶¬
+		pFire = new CFireNormal(type);
+
+		break;
+
 	default:	// —áŠOˆ—
 		assert(false);
 		break;

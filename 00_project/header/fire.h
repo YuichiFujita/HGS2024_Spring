@@ -26,6 +26,8 @@ public:
 	enum EType
 	{
 		TYPE_NORMAL = 0,	// ^‚Á’¼‚®
+		TYPE_FLUFFY,		// ‚Ó‚í‚Ó‚í
+		TYPE_FAST,			// ‘‚¢
 		TYPE_MAX			// ‚±‚Ì—ñ‹“Œ^‚Ì‘”
 	};
 
