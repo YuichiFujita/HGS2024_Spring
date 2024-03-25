@@ -18,7 +18,7 @@
 #------------------------------------------------------------------------------
 LIMITSET
 	CENTER = 0.00 0.00 0.00
-	RADIUS = 1800.00
+	RADIUS = 2000.00
 	FIELD = 0.00
 	KILLY = -150.00
 END_LIMITSET
@@ -42,7 +42,7 @@ STAGE_FIELDSET
 		TEXTURE_ID = 0
 		POS = 0.0 50.0 0.0
 		ROT = 0.0 0.0 0.0
-		SIZE = 6000.0 6000.0
+		SIZE = 4000.0 4000.0
 		COL = 1.0 1.0 1.0 1.0
 		PART = 24 24
 	END_FIELDSET
@@ -164,7 +164,7 @@ STAGE_LIQUIDSET
 		ROT = 0.0 0.0 0.0
 		SIZE = 60000.0 60000.0
 		COL = 1.0 1.0 1.0 1.0
-		PART = 128 128
+		PART = 64 64
 		TEXMOVE_LOW = 0.002 0.0002
 		TEXMOVE_HIGH = 0.0 0.002
 		MAX_UP = 20.0

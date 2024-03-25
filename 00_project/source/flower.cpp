@@ -38,6 +38,10 @@ namespace
 	const float SPAWN_ALPHA	= 0.65f;	// 花の生成時透明度
 	const float GLOW_SPEED	= 2.0f;		// 花の生える速度
 }
+//************************************************************
+//	定数宣言
+//************************************************************
+int CFlower::m_nNumAll = 0;	// 花の総数
 
 //************************************************************
 //	子クラス [CFlower] のメンバ関数
@@ -49,7 +53,7 @@ CFlower::CFlower() : CObject3D(CObject::LABEL_FLOWER, CObject::DIM_3D, PRIORITY)
 	m_pShadow	(nullptr),		// 影の情報
 	m_state		(EState::NONE)	// 状態
 {
-
+	m_nNumAll++;
 }
 
 //============================================================
@@ -57,7 +61,7 @@ CFlower::CFlower() : CObject3D(CObject::LABEL_FLOWER, CObject::DIM_3D, PRIORITY)
 //============================================================
 CFlower::~CFlower()
 {
-
+	m_nNumAll--;
 }
 
 //============================================================
@@ -268,7 +272,7 @@ void CFlower::RandomSpawn(const int nNum)
 		posSet.z = (float)(rand() % (nLimit * 2) - nLimit + 1);
 
 		// 生成位置を補正
-		collision::CirclePillar(posSet, posTarget, SIZE_FLOWER.x, /*pPlayer->GetRadius()*/ 10.0f);	// ターゲット内部の生成防止
+		collision::CirclePillar(posSet, posTarget, SIZE_FLOWER.x, pPlayer->GetRadius());	// ターゲット内部の生成防止
 		CScene::GetStage()->LimitPosition(posSet, SIZE_FLOWER.x);	// ステージ範囲外の生成防止
 
 		// 生成向きを設定
@@ -277,4 +281,12 @@ void CFlower::RandomSpawn(const int nNum)
 		// 花オブジェクトの生成
 		CFlower::Create(posSet, rotSet);
 	}
+}
+
+//============================================================
+//	総数取得処理
+//============================================================
+int CFlower::GetNumAll(void)
+{
+	return m_nNumAll;
 }

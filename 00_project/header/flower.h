@@ -50,8 +50,12 @@ public:
 	// 静的メンバ関数
 	static CFlower *Create(const D3DXVECTOR3& rPos, const D3DXVECTOR3& rRot);	// 生成
 	static void RandomSpawn(const int nNum);	// ランダム生成
+	static int GetNumAll(void);	// 総数取得
 
 private:
+	// 静的メンバ変数
+	static int m_nNumAll;	// 花の総数
+
 	// メンバ変数
 	CShadow *m_pShadow;	// 影の情報
 	EState m_state;		// 状態

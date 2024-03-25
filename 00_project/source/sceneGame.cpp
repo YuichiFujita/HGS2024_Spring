@@ -22,6 +22,7 @@
 #include "player.h"
 #include "flower.h"
 #include "fire.h"
+#include "multiValue.h"
 
 //************************************************************
 //	定数宣言
@@ -50,7 +51,8 @@ CTimerUI		*CSceneGame::m_pTimerUI		= nullptr;	// タイマーUI
 CCinemaScope	*CSceneGame::m_pCinemaScope	= nullptr;	// シネマスコープ
 CPause			*CSceneGame::m_pPause		= nullptr;	// ポーズ
 CHitStop		*CSceneGame::m_pHitStop		= nullptr;	// ヒットストップ
-CFlash			*CSceneGame::m_pFlash		= nullptr;	// フラッシュ
+CFlash			* CSceneGame::m_pFlash		= nullptr;	// フラッシュ
+CMultiValue		*CSceneGame::m_pScoreUI		= nullptr;	// スコア
 
 //************************************************************
 //	子クラス [CSceneGame] のメンバ関数
@@ -81,6 +83,16 @@ HRESULT CSceneGame::Init(void)
 	//--------------------------------------------------------
 	// シーンの初期化
 	CScene::Init();	// ステージ・プレイヤーの生成
+
+	m_pScoreUI = CMultiValue::Create
+	(
+		CValue::ETexture::TEXTURE_NORMAL,
+		0,
+		3,
+		D3DXVECTOR3(55.0f, 43.5f, 0.0f),				// 位置
+		timerInfo::VAL_SIZE,		// 数字の大きさ
+		D3DXVECTOR3(40.0f, 0.0f, 0.0f)		// 区切りの大きさ
+	);
 
 	// タイマーUIの生成
 	m_pTimerUI = CTimerUI::Create
@@ -157,8 +169,8 @@ HRESULT CSceneGame::Init(void)
 	//	初期設定
 	//--------------------------------------------------------
 	// カメラを設定
-	GET_MANAGER->GetCamera()->SetState(CCamera::STATE_FOLLOW);	// カメラを追従状態に設定
-	GET_MANAGER->GetCamera()->SetDestFollow();					// 目標位置を設定
+	GET_MANAGER->GetCamera()->SetState(CCamera::STATE_FIXED);	// カメラを固定状態に設定
+	GET_MANAGER->GetCamera()->SetDestFixed();					// 目標位置を設定
 
 	// 花をはやす
 	CFlower::RandomSpawn(20);
@@ -205,6 +217,10 @@ void CSceneGame::Update(void)
 	// ゲームマネージャーの更新
 	assert(m_pGameManager != nullptr);
 	m_pGameManager->Update();
+
+	// タイマーUIの更新
+	assert(m_pScoreUI != nullptr);
+	m_pScoreUI->Update();
 
 	// タイマーUIの更新
 	assert(m_pTimerUI != nullptr);
@@ -296,6 +312,18 @@ CGameManager *CSceneGame::GetGameManager(void)
 
 	// ゲームマネージャーのポインタを返す
 	return m_pGameManager;
+}
+
+//============================================================
+//	タイマーUI取得処理
+//============================================================
+CMultiValue *CSceneGame::GetScoreUI(void)
+{
+	// インスタンス未使用
+	assert(m_pScoreUI != nullptr);
+
+	// タイマーUIのポインタを返す
+	return m_pScoreUI;
 }
 
 //============================================================
