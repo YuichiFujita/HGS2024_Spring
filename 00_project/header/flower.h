@@ -28,6 +28,13 @@ class CShadow;	// 影クラス
 class CFlower : public CObject3D
 {
 public:
+	enum EState
+	{
+		NONE = 0,	// 何もしない
+		SPAWN,		// スポーン
+		MAX			// この列挙の総数
+	};
+
 	// コンストラクタ
 	CFlower();
 
@@ -47,6 +54,7 @@ public:
 private:
 	// メンバ変数
 	CShadow *m_pShadow;	// 影の情報
+	EState m_state;		// 状態
 };
 
 #endif	// _FLOWER_H_
