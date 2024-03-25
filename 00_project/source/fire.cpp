@@ -269,8 +269,8 @@ bool CFire::UpdateDelete(void)
 		// ‰ŠÁ‚·
 		Uninit();
 
-		// ‘SÄó‘Ô‚É‚·‚é
-		CSceneGame::GetGameManager()->SetBurn();
+		//// ‘SÄó‘Ô‚É‚·‚é
+		//CSceneGame::GetGameManager()->SetBurn();
 
 		return true;
 	}

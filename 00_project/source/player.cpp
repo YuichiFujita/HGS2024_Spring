@@ -157,16 +157,15 @@ void CPlayer::UpdateShot()
 			Pos.x += (sinf(-Rot.z) * (ShotPower * 0.1f) * nCntEffect);
 			Pos.y += (cosf(Rot.z) * (ShotPower * 0.1f) * nCntEffect);
 
-			CEffect3D::Create(Pos, 10.0f, CEffect3D::EType::TYPE_NORMAL, 2);
+			CEffect3D::Create(D3DXVECTOR3((sinf(-Rot.z) * 80.0f) + Pos.x, (cosf(Rot.z) * 80.0f) + Pos.y,Pos.z), 10.0f, CEffect3D::EType::TYPE_NORMAL, 2);
 		}
 	}
 
 	if (GET_INPUTKEY->IsRelease(DIK_SPACE) == true)
 	{
-		CEffect3D::Create(Pos, 10.0f, CEffect3D::EType::TYPE_NORMAL, 60,D3DXVECTOR3(sinf(-Rot.z) * ShotPower, cosf(Rot.z) * ShotPower, 0.0f));
+		CEffect3D::Create(D3DXVECTOR3((sinf(-Rot.z) * 80.0f) + Pos.x, (cosf(Rot.z) * 80.0f) + Pos.y, Pos.z), 10.0f, CEffect3D::EType::TYPE_NORMAL, 60,D3DXVECTOR3(sinf(-Rot.z) * ShotPower, cosf(Rot.z) * ShotPower, 0.0f));
 
 		ShotPower = 0;
-
 
 		////スコア確認のデバッグ
 		//CMultiValue *pScore = CSceneGame::GetScoreUI();
