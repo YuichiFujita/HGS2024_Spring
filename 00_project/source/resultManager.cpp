@@ -784,6 +784,7 @@ void CResultManager::SkipStaging(void)
 {
 	// すこあ・タイム表示をONにする
 	m_pScoreLogo->SetEnableDraw(true);
+	m_pScore->SetEnableDraw(true);
 	m_pTimeLogo->SetEnableDraw(true);
 	m_pTime->SetEnableDraw(true);
 
