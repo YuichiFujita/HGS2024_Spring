@@ -52,14 +52,14 @@ CGameManager::~CGameManager()
 //============================================================
 HRESULT CGameManager::Init(void)
 {
-	// ポインタを宣言
-	CPlayer *pPlayer = CScene::GetPlayer();	// プレイヤーの情報
+	//// ポインタを宣言
+	//CPlayer *pPlayer = CScene::GetPlayer();	// プレイヤーの情報
 
 	// メンバ変数を初期化
 	m_state = STATE_NORMAL;	// 状態
 
-	// プレイヤーを出現させる
-	pPlayer->SetSpawn();
+	//// プレイヤーを出現させる
+	//pPlayer->SetSpawn();
 
 	// 成功を返す
 	return S_OK;

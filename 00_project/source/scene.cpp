@@ -24,7 +24,8 @@
 //************************************************************
 //	静的メンバ変数宣言
 //************************************************************
-CStage *CScene::m_pStage = nullptr;	// ステージの情報
+CStage* CScene::m_pStage = nullptr;	// ステージの情報
+CPlayer* CScene::m_pPlayer = nullptr;	// ステージの情報
 
 //************************************************************
 //	親クラス [CScene] のメンバ関数
@@ -54,7 +55,7 @@ HRESULT CScene::Init(void)
 	m_pStage = CStage::Create(m_mode);
 
 	// プレイヤーの生成
-	CPlayer::Create(m_mode);
+	m_pPlayer = CPlayer::Create(CPlayer::EType::TYPE_BOSS_NAME,D3DXVECTOR3(0.0f,50.0f,0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f));
 
 	// 成功を返す
 	return S_OK;
@@ -188,13 +189,11 @@ CStage *CScene::GetStage(void)
 //============================================================
 CPlayer *CScene::GetPlayer(void)
 {
-	CListManager<CPlayer> *pListManager = CPlayer::GetList();	// プレイヤーリストマネージャー
-	if (pListManager == nullptr)		 { return nullptr; }	// リスト未使用の場合抜ける
-	if (pListManager->GetNumAll() != 1)	 { return nullptr; }	// プレイヤーが1人ではない場合抜ける
-	CPlayer *pPlayer = pListManager->GetList().front();			// プレイヤーの情報
+	// インスタンス未使用
+	assert(m_pPlayer != nullptr);
 
-	// プレイヤーのポインタを返す
-	return pPlayer;
+	// ステージのポインタを返す
+	return m_pPlayer;
 }
 
 //============================================================
