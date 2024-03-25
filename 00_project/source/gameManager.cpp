@@ -25,13 +25,14 @@
 #include "wave.h"
 #include "flower.h"
 #include "collision.h"
+#include "stage.h"
 
 //************************************************************
 //	定数宣言
 //************************************************************
 namespace
 {
-	const int GAMEEND_WAIT_FRAME = 180;	// リザルト画面への遷移余韻フレーム
+	const int GAMEEND_WAIT_FRAME = 90;	// リザルト画面への遷移余韻フレーム
 
 	const int SPOWN_NUM = 2;	// 初期の生成数
 	const int SPOWN_RAND_POSX = 1200;	// 幅のランダム生成範囲
@@ -284,6 +285,13 @@ void CGameManager::BurnManager(void)
 			pFlower->Burn();
 		}
 	}
+
+	if (m_fMoveBurn >= CScene::GetStage()->GetStageLimit().fRadius)
+	{ // ステージの半径を超えた
+
+		// リザルト画面遷移
+		TransitionResult();
+	}
 }
 
 //============================================================
@@ -298,13 +306,13 @@ CGameManager::EState CGameManager::GetState(void) const
 //============================================================
 //	リザルト画面遷移処理
 //============================================================
-void CGameManager::TransitionResult(const CRetentionManager::EWin win)
+void CGameManager::TransitionResult(void)
 {
 	// タイマーの計測終了
 	CSceneGame::GetTimerUI()->End();
 
 	// リザルト情報を保存
-	GET_RETENTION->SetResult(win, CSceneGame::GetTimerUI()->Get());
+	GET_RETENTION->SetResult(CSceneGame::GetTimerUI()->Get());
 
 	// リザルト画面に遷移
 	GET_MANAGER->SetScene(CScene::MODE_RESULT, GAMEEND_WAIT_FRAME);
