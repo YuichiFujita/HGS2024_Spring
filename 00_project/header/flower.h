@@ -32,6 +32,8 @@ public:
 	{
 		NONE = 0,	// 何もしない
 		SPAWN,		// スポーン
+		BURN,		// 燃え燃え
+		FADE,		// フェードアウト
 		MAX			// この列挙の総数
 	};
 
@@ -46,17 +48,23 @@ public:
 	void Uninit(void) override;		// 終了
 	void Update(void) override;		// 更新
 	void Draw(CShader *pShader = nullptr) override;	// 描画
+	int GetState(void) const override;				// 状態取得
+	float GetRadius(void) const override;			// 半径取得
 
 	// 静的メンバ関数
 	static CFlower *Create(const D3DXVECTOR3& rPos, const D3DXVECTOR3& rRot);	// 生成
-	static void RandomSpawn(const int nNum);	// ランダム生成
-	static int GetNumAll(void);	// 総数取得
+	static CListManager<CFlower> *GetList(void);	// リスト取得
+	static void RandomSpawn(const int nNum);		// ランダム生成
+
+	// メンバ関数
+	void Burn(void) { m_state = EState::BURN; }	// 燃えさせる
 
 private:
 	// 静的メンバ変数
-	static int m_nNumAll;	// 花の総数
+	static CListManager<CFlower> *m_pList;	// オブジェクトリスト
 
 	// メンバ変数
+	CListManager<CFlower>::AIterator m_iterator;	// イテレーター
 	CShadow *m_pShadow;	// 影の情報
 	EState m_state;		// 状態
 };
