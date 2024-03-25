@@ -58,7 +58,15 @@ public:
 		LABEL_SE_EXPLOSION,			// 爆発音
 		LABEL_SE_FIRE,				// 炎音
 		LABEL_SE_THUNDER,			// 雷音
-		LABEL_SE_THUNDER_WARN,		// 雷警告音
+		LABEL_SE_COMBO00,		// コンボ
+		LABEL_SE_COMBO01,		// コンボ
+		LABEL_SE_COMBO02,		// コンボ
+		LABEL_SE_COMBO03,		// コンボ
+		LABEL_SE_COMBO04,		// コンボ
+		LABEL_SE_HIT,		//ヒット
+		LABEL_SE_SETBULLET,		//発射
+		LABEL_SE_END,		//死亡
+
 		LABEL_MAX					// この列挙型の総数
 	};
 
