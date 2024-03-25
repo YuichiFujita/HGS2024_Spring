@@ -1,62 +1,60 @@
 //============================================================
 //
-//	モデル文字ヘッダー [modelFont.h]
+//	花ヘッダー [flower.h]
 //	Author：藤田勇一
 //
 //============================================================
 //************************************************************
 //	二重インクルード防止
 //************************************************************
-#ifndef _MODEL_FONT_H_
-#define _MODEL_FONT_H_
+#ifndef _FLOWER_H_
+#define _FLOWER_H_
 
 //************************************************************
 //	インクルードファイル
 //************************************************************
-#include "objectModel.h"
+#include "main.h"
+#include "object3D.h"
+
+//************************************************************
+//	前方宣言
+//************************************************************
+class CShadow;	// 影クラス
 
 //************************************************************
 //	クラス定義
 //************************************************************
-// モデル文字クラス
-class CPlayer : public CObjectModel
+// 花クラス
+class CFlower : public CObject3D
 {
 public:
-	// 種類列挙
-	enum EType
+	enum EState
 	{
-		TYPE_BOSS_NAME = 0,	// ボスの名前
-		TYPE_MAX			// この列挙型の総数
+		NONE = 0,	// 何もしない
+		SPAWN,		// スポーン
+		MAX			// この列挙の総数
 	};
 
 	// コンストラクタ
-	CPlayer();
+	CFlower();
 
 	// デストラクタ
-	~CPlayer() override;
+	~CFlower();
 
 	// オーバーライド関数
 	HRESULT Init(void) override;	// 初期化
 	void Uninit(void) override;		// 終了
 	void Update(void) override;		// 更新
-	void Draw(CShader* pShader = nullptr) override;	// 描画
-
-	void UpdateRot();
-	void UpdateShot();
-
-	float GetRadius() { return 10.0f; }
+	void Draw(CShader *pShader = nullptr) override;	// 描画
 
 	// 静的メンバ関数
-	static CPlayer* Create	// 生成
-	( // 引数
-		const EType type,						// 種類
-		const D3DXVECTOR3& rPos,				// 位置
-		const D3DXVECTOR3& rRot = VEC3_ZERO,	// 向き
-		const D3DXVECTOR3& rScale = VEC3_ONE	// 大きさ
-	);
+	static CFlower *Create(const D3DXVECTOR3& rPos, const D3DXVECTOR3& rRot);	// 生成
+	static void RandomSpawn(const int nNum);	// ランダム生成
 
 private:
-	float ShotPower;	//弾の強さ
+	// メンバ変数
+	CShadow *m_pShadow;	// 影の情報
+	EState m_state;		// 状態
 };
 
-#endif	// _MODEL_FONT_H_
+#endif	// _FLOWER_H_

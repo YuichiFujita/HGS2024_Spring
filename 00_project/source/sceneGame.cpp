@@ -20,6 +20,8 @@
 #include "flash.h"
 #include "stage.h"
 #include "player.h"
+#include "flower.h"
+#include "fire.h"
 
 //************************************************************
 //	’è”éŒ¾
@@ -158,6 +160,9 @@ HRESULT CSceneGame::Init(void)
 	GET_MANAGER->GetCamera()->SetState(CCamera::STATE_FOLLOW);	// ƒJƒƒ‰‚ð’Ç]ó‘Ô‚ÉÝ’è
 	GET_MANAGER->GetCamera()->SetDestFollow();					// –Ú•WˆÊ’u‚ðÝ’è
 
+	// ‰Ô‚ð‚Í‚â‚·
+	CFlower::RandomSpawn(20);
+
 	// BGM‚ÌÄ¶
 	PLAY_SOUND(CSound::LABEL_BGM_GAME);
 
@@ -262,6 +267,14 @@ void CSceneGame::Update(void)
 	if (GET_INPUTKEY->IsTrigger(DIK_0))
 	{
 		GET_MANAGER->SetScene(CScene::MODE_RESULT);
+	}
+	if (GET_INPUTKEY->IsTrigger(DIK_9))
+	{
+		CFlower::RandomSpawn(20);
+	}
+	if (GET_INPUTKEY->IsTrigger(DIK_8))
+	{
+		CFire::Create(CFire::TYPE_NORMAL, 1.0f, D3DXVECTOR3(0.0f, 600.0f, 0.0f));
 	}
 }
 

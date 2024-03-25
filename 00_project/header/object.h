@@ -85,7 +85,8 @@ public:
 		LABEL_EFFECT,		// エフェクト
 		LABEL_PARTICLE,		// パーティクル
 		LABEL_PLAYER,		// プレイヤー
-		LABEL_ENEMY,		// 敵
+		LABEL_FLOWER,		// 花
+		LABEL_FIRE,			// 炎
 		LABEL_FIELD,		// 地面
 		LABEL_WALL,			// 壁
 		LABEL_SCENERY,		// 景色
