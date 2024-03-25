@@ -50,7 +50,6 @@ CListManager<CFlower> *CFlower::m_pList = nullptr;	// オブジェクトリスト
 //	コンストラクタ
 //============================================================
 CFlower::CFlower() : CObject3D(CObject::LABEL_FLOWER, CObject::DIM_3D, PRIORITY),
-	m_pShadow	(nullptr),		// 影の情報
 	m_state		(EState::NONE)	// 状態
 {
 
@@ -70,18 +69,7 @@ CFlower::~CFlower()
 HRESULT CFlower::Init(void)
 {
 	// メンバ変数を初期化
-	m_pShadow = nullptr;		// 影の情報
 	m_state = EState::SPAWN;	// 状態
-
-	// 影の生成
-	m_pShadow = CShadow::Create(CShadow::TEXTURE_NORMAL, SHADOW_SIZE, this, SHADOW_ALPHA, SHADOW_ALPHA);
-	if (m_pShadow == nullptr)
-	{ // 非使用中の場合
-
-		// 失敗を返す
-		assert(false);
-		return E_FAIL;
-	}
 
 	// オブジェクト3Dの初期化
 	if (FAILED(CObject3D::Init()))
@@ -151,9 +139,6 @@ HRESULT CFlower::Init(void)
 //============================================================
 void CFlower::Uninit(void)
 {
-	// 影を破棄
-	m_pShadow->Uninit();
-
 	// リストから自身のオブジェクトを削除
 	m_pList->DeleteList(m_iterator);
 
@@ -252,9 +237,6 @@ void CFlower::Update(void)
 	// 位置を更新
 	SetVec3Position(pos);
 
-	// 影の更新
-	m_pShadow->Update();
-
 	// オブジェクト3Dの更新
 	CObject3D::Update();
 }
@@ -322,9 +304,6 @@ CFlower *CFlower::Create
 
 		// 向きを設定
 		pFlower->SetVec3Rotation(rRot);
-
-		// 影の描画情報を設定
-		pFlower->m_pShadow->SetDrawInfo();
 
 		// 確保したアドレスを返す
 		return pFlower;

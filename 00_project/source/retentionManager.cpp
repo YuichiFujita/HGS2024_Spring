@@ -36,8 +36,7 @@ CRetentionManager::~CRetentionManager()
 HRESULT CRetentionManager::Init(void)
 {
 	// メンバ変数を初期化
-	m_result.win	= WIN_NONE;	// 勝利状況
-	m_result.nTime	= 0;		// 経過タイム
+	m_result.nTime = 0;	// 経過タイム
 
 	// 成功を返す
 	return S_OK;
@@ -96,31 +95,8 @@ void CRetentionManager::Release(CRetentionManager *&prRetentionManager)
 //============================================================
 //	リザルト情報の設定処理
 //============================================================
-void CRetentionManager::SetResult(const EWin win, const long nTime)
+void CRetentionManager::SetResult(const long nTime)
 {
-	if (win <= WIN_NONE || win >= WIN_MAX) { assert(false); return; }	// 勝利が正規ではない
-
-	// 引数のクリア状況を設定
-	m_result.win = win;
-
 	// 引数の経過タイムを設定
 	m_result.nTime = nTime;
-}
-
-//============================================================
-//	勝利状況の取得処理
-//============================================================
-CRetentionManager::EWin CRetentionManager::GetWin(void) const
-{
-	// 勝利状況を返す
-	return m_result.win;
-}
-
-//============================================================
-//	経過タイムの取得処理
-//============================================================
-long CRetentionManager::GetTime(void) const
-{
-	// 経過タイムを返す
-	return m_result.nTime;
 }

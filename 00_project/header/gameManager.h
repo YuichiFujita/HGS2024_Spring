@@ -45,7 +45,7 @@ public:
 	void Update(void);	// 更新
 	void SetBurn(void);	// 全焼状態設定
 	EState GetState(void) const;	// 状態取得
-	void TransitionResult(const CRetentionManager::EWin win);	// リザルト画面遷移
+	void TransitionResult(void);	// リザルト画面遷移
 
 	// 静的メンバ関数
 	static CGameManager *Create(void);	// 生成
