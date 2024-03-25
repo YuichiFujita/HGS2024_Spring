@@ -19,7 +19,7 @@ namespace
 {
 	const char* MODEL_FILE[] =	// モデルファイル
 	{
-		"data\\MODEL\\FONT\\name_boss000.x",	// ボスの名前
+		"data\\MODEL\\PLAYER\\pump.x",	// ボスの名前
 	};
 	const int PRIORITY = 5;	// モデル文字の優先順位
 
@@ -64,6 +64,11 @@ HRESULT CPlayer::Init(void)
 		assert(false);
 		return E_FAIL;
 	}
+
+	CObjectModel *pModel = CObjectModel::Create(GetVec3Position(), VEC3_ZERO);
+	pModel->SetLabel(CObject::LABEL_PLAYER);
+	pModel->BindModel(GET_MANAGER->GetModel()->Regist("data\\MODEL\\PLAYER\\housu.x"));
+	pModel->SetVec3Position(D3DXVECTOR3(0.0f, 75.0f, 0.0f));
 
 	// 成功を返す
 	return S_OK;
