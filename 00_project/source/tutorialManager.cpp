@@ -21,7 +21,7 @@ namespace
 {
 	const char *TEXTURE_FILE[] =	// テクスチャファイル
 	{
-		"data\\TEXTURE\\tyu-toriaru.png",	// 操作説明テクスチャ
+		"data\\TEXTURE\\tutorial.png",	// 操作説明テクスチャ
 		"data\\TEXTURE\\tutorial001.png",	// 終了説明テクスチャ
 	};
 
@@ -141,7 +141,8 @@ void CTutorialManager::Update(void)
 	CInputPad		*pPad		= GET_INPUTPAD;	// パッド
 
 	if (pKeyboard->IsTrigger(DIK_RETURN)
-	||  pPad->IsTrigger(CInputPad::KEY_START))
+	||  pPad->IsTrigger(CInputPad::KEY_START)
+	||	pPad->IsTrigger(CInputPad::KEY_A))
 	{
 		// シーンの設定
 		GET_MANAGER->SetScene(CScene::MODE_TITLE);	// タイトル画面

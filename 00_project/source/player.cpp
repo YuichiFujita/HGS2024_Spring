@@ -14,6 +14,7 @@
 #include "sceneGame.h"
 #include "multiValue.h"
 #include "bullet.h"
+#include "sound.h"
 
 //************************************************************
 //	íËêîêÈåæ
@@ -163,15 +164,26 @@ void CPlayer::UpdateShot()
 
 		for (int nCntEffect = 0; nCntEffect < 10; nCntEffect++)
 		{
-			Pos.x += (sinf(-Rot.z) * (ShotPower * 0.1f) * nCntEffect);
-			Pos.y += (cosf(Rot.z) * (ShotPower * 0.1f) * nCntEffect);
+			Pos.x += (sinf(-Rot.z) * (ShotPower * 0.15f) * nCntEffect);
+			Pos.y += (cosf(Rot.z) * (ShotPower * 0.15f) * nCntEffect);
 
-			CEffect3D::Create(D3DXVECTOR3((sinf(-Rot.z) * 80.0f) + Pos.x, (cosf(Rot.z) * 80.0f) + Pos.y,Pos.z), 10.0f, CEffect3D::EType::TYPE_NORMAL, 2);
+			CEffect3D::Create
+			(
+				D3DXVECTOR3((sinf(-Rot.z) * 80.0f) + Pos.x, (cosf(Rot.z) * 80.0f) + Pos.y,Pos.z), 
+				30.0f,
+				CEffect3D::EType::TYPE_NORMAL,
+				2,
+				VEC3_ZERO, 
+				VEC3_ZERO,
+				D3DXCOLOR(0.0f, 0.3f, 1.0f,1.0f));
 		}
 	}
 
 	if (GET_INPUTKEY->IsRelease(DIK_SPACE) == true || GET_INPUTPAD->IsRelease(CInputPad::EKey::KEY_A) == true)
 	{
+		// BGMÇÃçƒê∂
+		PLAY_SOUND(CSound::LABEL_SE_SETBULLET);
+
 		CBullet::Create
 		(
 			D3DXVECTOR3((sinf(-Rot.z) * 80.0f) + Pos.x, (cosf(Rot.z) * 80.0f) + Pos.y, Pos.z), 

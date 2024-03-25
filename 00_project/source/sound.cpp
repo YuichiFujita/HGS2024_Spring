@@ -48,7 +48,14 @@ namespace
 		{ "data\\SE\\explosion000.wav", 0 },	// 爆発音
 		{ "data\\SE\\fire000.wav", 0 },			// 炎音
 		{ "data\\SE\\thunder000.wav", 0 },		// 雷音
-		{ "data\\SE\\warning000.wav", 0 },		// 雷警告音
+		{ "data\\SE\\combo00.wav", 0 },		// コンボ
+		{ "data\\SE\\combo01.wav", 0 },		// コンボ
+		{ "data\\SE\\combo02.wav", 0 },		// コンボ
+		{ "data\\SE\\combo03.wav", 0 },		// コンボ
+		{ "data\\SE\\combo04.wav", 0 },		// コンボ
+		{ "data\\SE\\hit.wav", 0 },		//ヒット
+		{ "data\\SE\\bubble.wav", 0 },		//発射
+		{ "data\\SE\\end.wav", 0 },		//死亡
 	};
 }
 

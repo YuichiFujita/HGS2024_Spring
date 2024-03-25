@@ -18,6 +18,7 @@
 #include "particle3D.h"
 #include "sceneGame.h"
 #include "gameManager.h"
+#include "sound.h"
 
 //************************************************************
 //	’è”éŒ¾
@@ -273,6 +274,9 @@ bool CFire::UpdateDelete(void)
 {
 	if (m_pos.y <= CScene::GetStage()->GetFieldPositionHeight(m_pos))
 	{ // ’…’n–Ê‚æ‚è‰º‚É‚¢‚½İ’è
+
+		// SE‚ÌÄ¶
+		PLAY_SOUND(CSound::LABEL_SE_END);
 
 		// ‰ŠÁ‚·
 		Uninit();
