@@ -23,7 +23,7 @@ namespace
 	{
 		"data\\MODEL\\PLAYER\\pump.x",	// ボスの名前
 	};
-	const int PRIORITY = 5;	// モデル文字の優先順位
+	const int PRIORITY = 3;	// モデル文字の優先順位
 
 	const float ROT_MOVE = 0.02f;
 	const float SHOT_POAER_PULS = 1.0f;
