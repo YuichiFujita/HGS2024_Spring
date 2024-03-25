@@ -58,12 +58,12 @@ namespace
 		const CRenderState::EBlend BLEND = CRenderState::BLEND_ADD;	// ‰Š‚Ìƒ¿ƒuƒŒƒ“ƒh
 		const D3DXCOLOR COL = D3DXCOLOR(1.0f, 0.35f, 0.1f, 1.0f);	// ‰Š‚ÌF
 
-		const float	POSGAP		= 30.0f;	// ‰Š‚ÌˆÊ’u‚¸‚ê—Ê
-		const float	MOVE		= -2.0f;	// ‰Š‚ÌˆÚ“®—Ê
+		const float	POSGAP		= 10.0f;	// ‰Š‚ÌˆÊ’u‚¸‚ê—Ê
+		const float	MOVE		= -1.0f;	// ‰Š‚ÌˆÚ“®—Ê
 		const int	SPAWN		= 3;		// ‰Š‚Ì¶¬”
-		const int	EFF_LIFE	= 6;		// ‰Š‚Ìõ–½
-		const float	INIT_RAD	= 150.0f;	// ‰Š‚Ì”¼Œa
-		const float	INIT_SUBRAD	= 5.0f;		// ‰Š‚Ì”¼Œa‚ÌŒ¸Z—Ê
+		const int	EFF_LIFE	= 5;		// ‰Š‚Ìõ–½
+		const float	INIT_RAD	= 80.0f;	// ‰Š‚Ì”¼Œa
+		const float	INIT_SUBRAD	= 0.8f;		// ‰Š‚Ì”¼Œa‚ÌŒ¸Z—Ê
 		const int	DIV_RAD_RAND	= 61;	// ‰Š‚Ì”¼Œa‚Ìè—]Z‚Ì’l
 		const int	SUB_RAD_RAND	= 30;	// ‰Š‚Ì”¼Œa‚ÌŒ¸Z‚Ì’l
 		const int	DIV_SUBRAD_RAND	= 4;	// ‰Š‚Ì”¼Œa‚ÌŒ¸Z—Ê‚Ìè—]Z‚Ì’l
