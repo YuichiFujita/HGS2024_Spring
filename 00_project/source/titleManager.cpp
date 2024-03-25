@@ -23,9 +23,8 @@ namespace
 {
 	const char *TEX_LOGO_FILE[] =	// ロゴテクスチャファイル
 	{
-		"data\\TEXTURE\\title000.png",	// NEVERテクスチャ
-		"data\\TEXTURE\\title001.png",	// GIVEテクスチャ
-		"data\\TEXTURE\\title002.png",	// UP!テクスチャ
+		"data\\TEXTURE\\title000.png",	// DEFENSEテクスチャ
+		"data\\TEXTURE\\title001.png",	// FLOWERテクスチャ
 	};
 
 	const char *TEX_SELECT_FILE[] =	// 選択項目テクスチャファイル
@@ -45,18 +44,16 @@ namespace
 
 	namespace logo
 	{
-		const D3DXVECTOR3 POS_NEVER	= D3DXVECTOR3(340.0f,  140.0f, 0.0f);	// タイトルロゴの位置 (NEVER)
-		const D3DXVECTOR3 POS_GIVE	= D3DXVECTOR3(710.0f,  310.0f, 0.0f);	// タイトルロゴの位置 (GIVE)
-		const D3DXVECTOR3 POS_UP	= D3DXVECTOR3(1050.0f, 320.0f, 0.0f);	// タイトルロゴの位置 (UP!)
-
+		const D3DXVECTOR3 POS_DEFENSE	= D3DXVECTOR3(600.0f,  170.0f, 0.0f);	// タイトルロゴの位置 (DEFENSE)
+		const D3DXVECTOR3 POS_FLOWER	= D3DXVECTOR3(810.0f,  340.0f, 0.0f);	// タイトルロゴの位置 (FLOWER)
+		
 		const D3DXVECTOR3 POS[] =	// 位置配列
 		{
-			POS_NEVER,	// NEVERの位置
-			POS_GIVE,	// GIVEの位置
-			POS_UP,		// UP!の位置
+			POS_DEFENSE,	// DEFENSEの位置
+			POS_FLOWER,		// FLOWERの位置
 		};
 
-		const D3DXVECTOR3 SIZE	= D3DXVECTOR3(666.0f, 290.0f, 0.0f) * 0.8f;	// タイトルロゴの大きさ
+		const D3DXVECTOR3 SIZE	= D3DXVECTOR3(1100.0f, 250.0f, 0.0f) * 0.8f;	// タイトルロゴの大きさ
 		const float	INIT_SCALE	= 15.0f;	// タイトルロゴの初期拡大率
 		const float	SUB_SCALE	= 0.65f;	// タイトルロゴ拡大率の減算量
 	}
