@@ -84,12 +84,12 @@ HRESULT CSceneGame::Init(void)
 	// シーンの初期化
 	CScene::Init();	// ステージ・プレイヤーの生成
 
-	CObject2D* pScoreBG = CObject2D::Create(D3DXVECTOR3(200.0f, 75.0f, 0.0f), D3DXVECTOR3(400.0f, 35.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI));
+	CObject2D* pScoreBG = CObject2D::Create(D3DXVECTOR3(100.0f, 75.0f, 0.0f), D3DXVECTOR3(400.0f, 35.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI));
 	pScoreBG->BindTexture("data\\TEXTURE\\timer001.png");
 	pScoreBG->SetLabel(CObject::ELabel::LABEL_UI);
 
-	CObject2D* pScoreBG = CObject2D::Create(D3DXVECTOR3(200.0f, 75.0f, 0.0f), D3DXVECTOR3(400.0f, 35.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI));
-	pScoreBG->BindTexture("data\\TEXTURE\\timer001.png");
+	pScoreBG = CObject2D::Create(D3DXVECTOR3(70.0f, 45.0f, 0.0f), D3DXVECTOR3(180.0f, 50.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	pScoreBG->BindTexture("data\\TEXTURE\\result001.png");
 	pScoreBG->SetLabel(CObject::ELabel::LABEL_UI);
 
 	m_pScoreUI = CMultiValue::Create
@@ -97,7 +97,7 @@ HRESULT CSceneGame::Init(void)
 		CValue::ETexture::TEXTURE_NORMAL,
 		0,
 		3,
-		D3DXVECTOR3(255.0f, 43.5f, 0.0f),	// 位置
+		D3DXVECTOR3(165.0f, 43.5f, 0.0f),	// 位置
 		timerInfo::VAL_SIZE,				// 数字の大きさ
 		D3DXVECTOR3(40.0f, 0.0f, 0.0f)		// 区切りの大きさ
 	);

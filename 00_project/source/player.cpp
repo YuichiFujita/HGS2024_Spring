@@ -120,7 +120,8 @@ void CPlayer::UpdateRot()
 {
 	D3DXVECTOR3 Rot = GetVec3Rotation();
 
-	if (GET_INPUTKEY->IsPress(DIK_A) == true || GET_INPUTKEY->IsPress(DIK_LEFT) == true)
+	if (GET_INPUTKEY->IsPress(DIK_A) == true || GET_INPUTKEY->IsPress(DIK_LEFT) == true ||
+		GET_INPUTPAD->GetPressLStickX(0) < 0.0f)
 	{
 		Rot.z += ROT_MOVE;
 
@@ -129,7 +130,8 @@ void CPlayer::UpdateRot()
 			Rot.z = D3DX_PI * 0.5f;
 		}
 	}
-	if (GET_INPUTKEY->IsPress(DIK_D) == true || GET_INPUTKEY->IsPress(DIK_RIGHT) == true)
+	if (GET_INPUTKEY->IsPress(DIK_D) == true || GET_INPUTKEY->IsPress(DIK_RIGHT) == true ||
+		GET_INPUTPAD->GetPressLStickX(0) > 0.0f)
 	{
 		Rot.z -= ROT_MOVE;
 
@@ -150,7 +152,7 @@ void CPlayer::UpdateShot()
 	D3DXVECTOR3 Pos = GetVec3Position();
 	D3DXVECTOR3 Rot = GetVec3Rotation();
 
-	if (GET_INPUTKEY->IsPress(DIK_SPACE) == true)
+	if (GET_INPUTKEY->IsPress(DIK_SPACE) == true || GET_INPUTPAD->IsPress(CInputPad::EKey::KEY_A) == true)
 	{
 		ShotPower += SHOT_POAER_PULS;
 
@@ -168,7 +170,7 @@ void CPlayer::UpdateShot()
 		}
 	}
 
-	if (GET_INPUTKEY->IsRelease(DIK_SPACE) == true)
+	if (GET_INPUTKEY->IsRelease(DIK_SPACE) == true || GET_INPUTPAD->IsRelease(CInputPad::EKey::KEY_A) == true)
 	{
 		CBullet::Create
 		(

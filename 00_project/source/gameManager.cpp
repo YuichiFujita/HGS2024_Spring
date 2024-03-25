@@ -34,7 +34,7 @@ namespace
 {
 	const int GAMEEND_WAIT_FRAME = 90;	// リザルト画面への遷移余韻フレーム
 
-	const int SPOWN_NUM = 2;	// 初期の生成数
+	const int SPOWN_NUM = 4;	// 初期の生成数
 	const int SPOWN_RAND_POSX = 1200;	// 幅のランダム生成範囲
 	const float SPOWN_POSY = 1000.0f;	// 生成の高さ
 	const int SPOWN_RAND_SPEED = 90;	// 生成時の炎の速度のランダム範囲
@@ -169,11 +169,11 @@ void CGameManager::SpownManager()
 			float frandSpeed = (float)(rand() % SPOWN_RAND_SPEED + 1);
 			int nRandFire = 0;
 
-			if (Spownlevel >= 5)
+			if (Spownlevel >= 6)
 			{
 				nRandFire = rand() % 3;
 			}
-			else if (Spownlevel >= 4)
+			else if (Spownlevel >= 5)
 			{
 				nRandFire = rand() % 2;
 			}
