@@ -61,7 +61,8 @@ public:
 
 private:
 	// 静的メンバ変数
-	static CStage *m_pStage;	// ステージの情報
+	static CStage* m_pStage;	// ステージの情報
+	static CPlayer* m_pPlayer;	// プレイヤーの情報
 
 	// メンバ変数
 	EMode m_mode;	// モード
