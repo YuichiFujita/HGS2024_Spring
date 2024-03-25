@@ -250,7 +250,7 @@ HRESULT CResultManager::Init(void)
 	m_pTime->SetEnableDraw(false);
 
 	// タイムを設定
-	if (!m_pTime->SetMSec(GET_RETENTION->GetTime()))
+	if (!m_pTime->SetMSec(GET_RETENTION->GetResult().nTime))
 	{ // 設定に失敗した場合
 
 		// 失敗を返す
@@ -588,32 +588,8 @@ void CResultManager::UpdateResult(void)
 			m_apResult[nCntResult]->SetVec3Sizing(SIZE_RESULT);
 		}
 
-		switch (GET_RETENTION->GetWin())
-		{ // リザルトごとの処理
-		case CRetentionManager::WIN_FAILED:
-
-			// 状態を変更
-			m_state = STATE_CONTINUE_WAIT;	// コンテニュー表示待機状態
-
-			break;
-
-		case CRetentionManager::WIN_CLEAR:
-
-			// 状態を変更
-			m_state = STATE_TIME_WAIT;	// タイム表示待機状態
-
-			break;
-
-		default:
-
-			// エラーメッセージボックス
-			MessageBox(nullptr, "リザルトなしが設定されています", "警告！", MB_ICONWARNING);
-
-			// 状態を変更
-			m_state = STATE_CONTINUE_WAIT;	// コンテニュー表示待機状態
-
-			break;
-		}
+		// 状態を変更
+		m_state = STATE_TIME_WAIT;	// タイム表示待機状態
 
 		// サウンドの再生
 		PLAY_SOUND(CSound::LABEL_SE_DECISION_001);	// 決定音01
@@ -814,18 +790,14 @@ void CResultManager::SkipStaging(void)
 		m_apResult[nCntResult]->SetVec3Sizing(SIZE_RESULT);
 	}
 
-	if (GET_RETENTION->GetWin() == CRetentionManager::WIN_CLEAR)
-	{ // クリアしている場合
+	// タイム表示をONにする
+	m_pTimeLogo->SetEnableDraw(true);
+	m_pTime->SetEnableDraw(true);
 
-		// タイム表示をONにする
-		m_pTimeLogo->SetEnableDraw(true);
-		m_pTime->SetEnableDraw(true);
-
-		// タイム表示の大きさを設定
-		m_pTimeLogo->SetVec3Sizing(SIZE_TIME_LOGO);
-		m_pTime->SetSizingValue(SIZE_TIME_VAL);
-		m_pTime->SetSizingPart(SIZE_TIME_PART);
-	}
+	// タイム表示の大きさを設定
+	m_pTimeLogo->SetVec3Sizing(SIZE_TIME_LOGO);
+	m_pTime->SetSizingValue(SIZE_TIME_VAL);
+	m_pTime->SetSizingPart(SIZE_TIME_PART);
 
 	// コンテニューロゴ表示の描画開始
 	m_pContLogo->SetEnableDraw(true);
@@ -862,32 +834,7 @@ void CResultManager::SetTexResult(void)
 	m_apResult[0]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_MISSION]));
 
 	// RESULTテクスチャを登録・割当
-	switch (GET_RETENTION->GetWin())
-	{ // リザルトごとの処理
-	case CRetentionManager::WIN_FAILED:
-
-		// FAILEDテクスチャ
-		m_apResult[1]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_FAILED]));
-
-		break;
-
-	case CRetentionManager::WIN_CLEAR:
-
-		// CLEARテクスチャ
-		m_apResult[1]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_CLEAR]));
-
-		break;
-
-	default:
-
-		// エラーメッセージボックス
-		MessageBox(nullptr, "リザルトなしが設定されています", "警告！", MB_ICONWARNING);
-
-		// FAILEDテクスチャ
-		m_apResult[1]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_FAILED]));
-
-		break;
-	}
+	m_apResult[1]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_CLEAR]));
 }
 
 //============================================================

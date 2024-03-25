@@ -172,9 +172,6 @@ HRESULT CSceneGame::Init(void)
 	GET_MANAGER->GetCamera()->SetState(CCamera::STATE_FIXED);	// カメラを固定状態に設定
 	GET_MANAGER->GetCamera()->SetDestFixed();					// 目標位置を設定
 
-	// 花をはやす
-	CFlower::RandomSpawn(20);
-
 	// BGMの再生
 	PLAY_SOUND(CSound::LABEL_BGM_GAME);
 
@@ -277,8 +274,6 @@ void CSceneGame::Update(void)
 		}
 	}
 
-#endif	// _DEBUG
-
 	// TODO：リザルト繊維
 	if (GET_INPUTKEY->IsTrigger(DIK_0))
 	{
@@ -296,6 +291,8 @@ void CSceneGame::Update(void)
 	{
 		m_pGameManager->SetBurn();
 	}
+
+#endif	// _DEBUG
 }
 
 //============================================================

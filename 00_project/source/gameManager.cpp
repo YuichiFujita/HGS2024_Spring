@@ -23,13 +23,16 @@
 #include "hitStop.h"
 #include "flash.h"
 #include "wave.h"
+#include "flower.h"
+#include "collision.h"
+#include "stage.h"
 
 //************************************************************
 //	定数宣言
 //************************************************************
 namespace
 {
-	const int GAMEEND_WAIT_FRAME = 180;	// リザルト画面への遷移余韻フレーム
+	const int GAMEEND_WAIT_FRAME = 90;	// リザルト画面への遷移余韻フレーム
 
 	const int SPOWN_NUM = 2;	// 初期の生成数
 	const int SPOWN_RAND_POSX = 1200;	// 幅のランダム生成範囲
@@ -70,6 +73,9 @@ HRESULT CGameManager::Init(void)
 
 	//生成カウントを初期化
 	SpownCount = 0;
+
+	// 中心からの燃え広がり量
+	m_fMoveBurn = 0.0f;
 
 	// 成功を返す
 	return S_OK;
@@ -234,9 +240,9 @@ void CGameManager::InitBurnManager(void)
 	if (!CSceneGame::GetHitStop()->IsStop())
 	{ // ヒットストップが終わったら
 
-		// 
+		// 波動生成
 		CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 120.0f, 0.0f), VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(70.0f, 14.0f, 0.02f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
-		CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 90.0f, 0.0f),  VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(40.0f, 12.0f, 0.03f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
+		//CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 90.0f, 0.0f),  VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(40.0f, 12.0f, 0.03f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
 		CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 60.0f, 0.0f),  VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(10.0f, 10.0f, 0.04f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
 
 		// 全焼開始
@@ -249,7 +255,43 @@ void CGameManager::InitBurnManager(void)
 //============================================================
 void CGameManager::BurnManager(void)
 {
+	// 中心からの燃え広がり量を広げる
+	m_fMoveBurn += 45.0f;
 
+	// 花のリスト取得
+	CListManager<CFlower> *pList = CFlower::GetList();
+	if (pList == nullptr) { return; }
+
+	std::list<CFlower*> list = pList->GetList();
+	for (auto pFlower : list)
+	{ // 全要素分繰り返す
+
+		// 状態が変更されている場合抜ける
+		CFlower::EState state = (CFlower::EState)pFlower->GetState();
+		if (state != CFlower::EState::NONE) { continue; }
+
+		// 判定
+		bool bHit = collision::Circle2D
+		(
+			pFlower->GetVec3Position(),
+			VEC3_ZERO,
+			pFlower->GetRadius(),
+			m_fMoveBurn
+		);
+		if (bHit)
+		{ // 当たった場合
+
+			// もえもえにする
+			pFlower->Burn();
+		}
+	}
+
+	if (m_fMoveBurn >= CScene::GetStage()->GetStageLimit().fRadius)
+	{ // ステージの半径を超えた
+
+		// リザルト画面遷移
+		TransitionResult();
+	}
 }
 
 //============================================================
@@ -264,13 +306,13 @@ CGameManager::EState CGameManager::GetState(void) const
 //============================================================
 //	リザルト画面遷移処理
 //============================================================
-void CGameManager::TransitionResult(const CRetentionManager::EWin win)
+void CGameManager::TransitionResult(void)
 {
 	// タイマーの計測終了
 	CSceneGame::GetTimerUI()->End();
 
 	// リザルト情報を保存
-	GET_RETENTION->SetResult(win, CSceneGame::GetTimerUI()->Get());
+	GET_RETENTION->SetResult(CSceneGame::GetTimerUI()->Get());
 
 	// リザルト画面に遷移
 	GET_MANAGER->SetScene(CScene::MODE_RESULT, GAMEEND_WAIT_FRAME);

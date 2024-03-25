@@ -86,6 +86,7 @@ public:
 		LABEL_PARTICLE,		// パーティクル
 		LABEL_PLAYER,		// プレイヤー
 		LABEL_FLOWER,		// 花
+		LABEL_BULLET,		// 水玉
 		LABEL_FIRE,			// 炎
 		LABEL_FIELD,		// 地面
 		LABEL_WALL,			// 壁

@@ -35,7 +35,6 @@ public:
 	// リザルト情報構造体
 	struct SResult
 	{
-		EWin win;	// 勝利状況
 		long nTime;	// 経過タイム
 	};
 
@@ -48,9 +47,8 @@ public:
 	static void Release(CRetentionManager *&prRetentionManager);	// 破棄
 
 	// メンバ関数
-	void SetResult(const EWin win, const long nTime);	// リザルト情報設定
-	EWin GetWin(void) const;	// 勝利状況取得
-	long GetTime(void) const;	// 経過タイム取得
+	void SetResult(const long nTime);	// リザルト情報設定
+	SResult GetResult(void) const { return m_result; }	// リザルト情報取得
 
 private:
 	// メンバ変数

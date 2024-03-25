@@ -20,6 +20,7 @@
 
 #include "stage.h"
 #include "player.h"
+#include "flower.h"
 
 //************************************************************
 //	静的メンバ変数宣言
@@ -56,6 +57,19 @@ HRESULT CScene::Init(void)
 
 	// プレイヤーの生成
 	m_pPlayer = CPlayer::Create(CPlayer::EType::TYPE_BOSS_NAME,D3DXVECTOR3(0.0f,150.0f,0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(3.0f, 3.0f, 3.0f));
+
+	if (m_mode == MODE_TITLE
+	||  m_mode == MODE_RESULT
+	||  m_mode == MODE_RANKING)
+	{
+		// 花をはやす
+		CFlower::RandomSpawn(150);
+	}
+	else if (m_mode == MODE_GAME)
+	{
+		// 花をはやす
+		CFlower::RandomSpawn(20);
+	}
 
 	// 成功を返す
 	return S_OK;
