@@ -34,7 +34,7 @@ CFire::CFire(const EType type) : CObject(CObject::LABEL_FIRE, CObject::DIM_3D, P
 	m_type		(type),			// 種類定数
 	m_pos		(VEC3_ZERO),	// 位置
 	m_move		(VEC3_ZERO),	// 移動量
-	m_fGravity	(0.0f)			// 重力
+	m_fSpeed	(0.0f)			// 重力
 {
 
 }
@@ -55,7 +55,7 @@ HRESULT CFire::Init(void)
 	// メンバ変数を初期化
 	m_pos = VEC3_ZERO;	// 位置
 	m_move = VEC3_ZERO;	// 移動量
-	m_fGravity = 0.0f;	// 重力
+	m_fSpeed = 0.0f;	// 重力
 
 	// 成功を返す
 	return S_OK;
@@ -75,8 +75,8 @@ void CFire::Uninit(void)
 //============================================================
 void CFire::Update(void)
 {
-	// 重力を与える
-	UpdateGravity();
+	//落下の更新
+	UpdateFall();
 
 	// 各子クラスごとの更新
 	UpdateMove();
@@ -141,7 +141,7 @@ float CFire::GetRadius(void) const
 CFire *CFire::Create
 ( // 引数
 	const EType type,		// 種類
-	const float fGravity,	// 重力
+	const float fSpeed,		// 速度
 	const D3DXVECTOR3& rPos	// 位置
 )
 {
@@ -152,6 +152,20 @@ CFire *CFire::Create
 	switch (type)
 	{ // 種類ごとの処理
 	case TYPE_NORMAL:
+
+		// 真っ直ぐ炎を生成
+		pFire = new CFireNormal(type);
+
+		break;
+
+	case TYPE_FLUFFY:
+
+		// 真っ直ぐ炎を生成
+		pFire = new CFireNormal(type);
+
+		break;
+
+	case TYPE_FAST:
 
 		// 真っ直ぐ炎を生成
 		pFire = new CFireNormal(type);
@@ -184,7 +198,7 @@ CFire *CFire::Create
 		pFire->SetVec3Position(rPos);
 
 		// 重力を設定
-		pFire->m_fGravity = fGravity;
+		pFire->m_fSpeed = -fSpeed;
 
 		// 確保したアドレスを返す
 		return pFire;
@@ -234,10 +248,10 @@ void CFire::Release(void)
 //============================================================
 //	重力の更新処理
 //============================================================
-void CFire::UpdateGravity(void)
+void CFire::UpdateFall(void)
 {
 	// 重力を加算
-	m_move.y -= m_fGravity;
+	m_move.y = m_fSpeed;
 }
 
 //============================================================

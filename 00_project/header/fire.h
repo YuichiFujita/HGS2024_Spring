@@ -26,6 +26,8 @@ public:
 	enum EType
 	{
 		TYPE_NORMAL = 0,	// 真っ直ぐ
+		TYPE_FLUFFY,		// ふわふわ
+		TYPE_FAST,			// 早い
 		TYPE_MAX			// この列挙型の総数
 	};
 
@@ -49,7 +51,7 @@ public:
 	static CFire *Create	// 生成
 	( // 引数
 		const EType type,		// 種類
-		const float fGravity,	// 重力
+		const float fSpeed,	// 重力
 		const D3DXVECTOR3& rPos	// 位置
 	);
 
@@ -69,13 +71,13 @@ private:
 	void Release(void) override;	// 破棄
 
 	// メンバ関数
-	void UpdateGravity(void);	// 重力の更新
+	void UpdateFall(void);	// 落下の更新
 	bool UpdateDelete(void);	// 削除の更新
 
 	// メンバ変数
 	D3DXVECTOR3	m_pos;	// 位置
 	D3DXVECTOR3	m_move;	// 移動量
-	float m_fGravity;	// 重力
+	float m_fSpeed;	// 速度
 	const EType m_type;	// 種類定数
 };
 

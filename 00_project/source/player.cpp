@@ -69,6 +69,7 @@ HRESULT CPlayer::Init(void)
 
 	CObjectModel *pModel = CObjectModel::Create(GetVec3Position(), VEC3_ZERO);
 	pModel->SetLabel(CObject::LABEL_PLAYER);
+	pModel->SetPriority(PRIORITY);
 	pModel->BindModel(GET_MANAGER->GetModel()->Regist("data\\MODEL\\PLAYER\\housu.x"));
 	pModel->SetVec3Position(D3DXVECTOR3(0.0f, 150.0f, 0.0f));
 	pModel->SetVec3Scaling(D3DXVECTOR3(3.0f, 3.0f, 3.0f));
@@ -167,7 +168,7 @@ void CPlayer::UpdateShot()
 		ShotPower = 0;
 
 
-		//スコア確認のデバッグ
+		////スコア確認のデバッグ
 		//CMultiValue *pScore = CSceneGame::GetScoreUI();
 		//pScore->AddNum(1);
 	}
