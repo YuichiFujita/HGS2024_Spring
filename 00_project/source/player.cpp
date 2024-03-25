@@ -27,7 +27,7 @@ namespace
 	};
 	const int PRIORITY = 3;	// ƒ‚ƒfƒ‹•¶š‚Ì—Dæ‡ˆÊ
 
-	const float ROT_MOVE = 0.03f;
+	const float ROT_MOVE = 0.032f;
 	const float SHOT_POAER_PULS = 1.0f;
 	const float DEF_SHOTPOWER = 10.0f;
 }
