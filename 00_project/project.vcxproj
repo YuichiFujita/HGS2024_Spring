@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="header\anim2D.h" />
     <ClInclude Include="header\blur.h" />
+    <ClInclude Include="header\bullet.h" />
     <ClInclude Include="header\camera.h" />
     <ClInclude Include="header\cinemaScope.h" />
     <ClInclude Include="header\collision.h" />
@@ -239,6 +240,7 @@
   <ItemGroup>
     <ClCompile Include="source\anim2D.cpp" />
     <ClCompile Include="source\blur.cpp" />
+    <ClCompile Include="source\bullet.cpp" />
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\cinemaScope.cpp" />
     <ClCompile Include="source\collision.cpp" />
