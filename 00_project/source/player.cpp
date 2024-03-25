@@ -176,6 +176,16 @@ void CPlayer::UpdateShot()
 				VEC3_ZERO, 
 				VEC3_ZERO,
 				D3DXCOLOR(0.0f, 0.3f, 1.0f,1.0f));
+
+			CEffect3D::Create
+			(
+				D3DXVECTOR3((sinf(-Rot.z) * 80.0f) + Pos.x, (cosf(Rot.z) * 80.0f) + Pos.y, Pos.z),
+				30.0f,
+				CEffect3D::EType::TYPE_NORMAL,
+				2,
+				VEC3_ZERO,
+				VEC3_ZERO,
+				D3DXCOLOR(0.0f, 0.3f, 1.0f, 1.0f));
 		}
 	}
 
