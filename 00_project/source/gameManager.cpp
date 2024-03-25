@@ -28,6 +28,7 @@
 #include "stage.h"
 #include "multiValue.h"
 #include "pause.h"
+#include "rankingManager.h"
 
 //************************************************************
 //	定数宣言
@@ -322,6 +323,9 @@ CGameManager::EState CGameManager::GetState(void) const
 //============================================================
 void CGameManager::TransitionResult(void)
 {
+	// フェードしている場合抜ける
+	if (GET_MANAGER->GetFade()->GetState() != CFade::FADE_NONE) { return; }
+
 	// タイマーの計測終了
 	CSceneGame::GetTimerUI()->End();
 
@@ -330,6 +334,9 @@ void CGameManager::TransitionResult(void)
 
 	// リザルト情報を保存
 	GET_RETENTION->SetScore(CSceneGame::GetScoreUI()->GetNum());
+
+	// ランキングに設定
+	CRankingManager::Set(CSceneGame::GetScoreUI()->GetNum());
 
 	// リザルト画面に遷移
 	GET_MANAGER->SetScene(CScene::MODE_RESULT, GAMEEND_WAIT_FRAME);
