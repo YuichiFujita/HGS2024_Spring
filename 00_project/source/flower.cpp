@@ -41,7 +41,7 @@ namespace
 //************************************************************
 //	定数宣言
 //************************************************************
-int CFlower::m_nNumAll = 0;	// 花の総数
+CListManager<CFlower> *CFlower::m_pList = nullptr;	// オブジェクトリスト
 
 //************************************************************
 //	子クラス [CFlower] のメンバ関数
@@ -53,7 +53,7 @@ CFlower::CFlower() : CObject3D(CObject::LABEL_FLOWER, CObject::DIM_3D, PRIORITY)
 	m_pShadow	(nullptr),		// 影の情報
 	m_state		(EState::NONE)	// 状態
 {
-	m_nNumAll++;
+
 }
 
 //============================================================
@@ -61,7 +61,7 @@ CFlower::CFlower() : CObject3D(CObject::LABEL_FLOWER, CObject::DIM_3D, PRIORITY)
 //============================================================
 CFlower::~CFlower()
 {
-	m_nNumAll--;
+
 }
 
 //============================================================
@@ -125,6 +125,23 @@ HRESULT CFlower::Init(void)
 	// Zバッファの使用状況を設定
 	pRenderState->SetZUpdate(true);
 
+	if (m_pList == nullptr)
+	{ // リストマネージャーが存在しない場合
+
+		// リストマネージャーの生成
+		m_pList = CListManager<CFlower>::Create();
+		if (m_pList == nullptr)
+		{ // 生成に失敗した場合
+
+			// 失敗を返す
+			assert(false);
+			return E_FAIL;
+		}
+	}
+
+	// リストに自身のオブジェクトを追加・イテレーターを取得
+	m_iterator = m_pList->AddList(this);
+
 	// 成功を返す
 	return S_OK;
 }
@@ -136,6 +153,16 @@ void CFlower::Uninit(void)
 {
 	// 影を破棄
 	m_pShadow->Uninit();
+
+	// リストから自身のオブジェクトを削除
+	m_pList->DeleteList(m_iterator);
+
+	if (m_pList->GetNumAll() == 0)
+	{ // オブジェクトが一つもない場合
+
+		// リストマネージャーの破棄
+		m_pList->Release(m_pList);
+	}
 
 	// オブジェクト3Dの終了
 	CObject3D::Uninit();
@@ -153,14 +180,14 @@ void CFlower::Update(void)
 	switch (m_state)
 	{ // 状態ごとの処理
 	case CFlower::NONE:
-
+	{
 		// 高さを地面に設定
 		pos.y = fLand;
 
 		break;
-
+	}
 	case CFlower::SPAWN:
-
+	{
 		// 地面からはやす
 		pos.y += GLOW_SPEED;
 		if (pos.y >= fLand)
@@ -178,7 +205,45 @@ void CFlower::Update(void)
 		}
 
 		break;
+	}
+	case CFlower::BURN:
+	{
+		// 色を設定
+		D3DXCOLOR col = GetColor();
+		col -= D3DXCOLOR(0.05f, 0.05f, 0.05f, 0.0f);
+		SetColor(col);
 
+		if (col.r <= 0.2f)
+		{ // 色が黒の場合
+
+			SetColor(D3DXCOLOR(0.2f, 0.2f, 0.2f, GetColor().a));
+
+			// フェードアウト状態にする
+			m_state = EState::FADE;
+		}
+
+		break;
+	}
+	case CFlower::FADE:
+	{
+		// 地面からはやす
+		pos.y -= 1.0f;
+
+		// 色を設定
+		D3DXCOLOR col = GetColor();
+		col.a -= 0.05f;
+		SetColor(col);
+
+		if (col.a <= 0.0f)
+		{ // 透明度が下がりきった場合
+
+			// 自身を終了
+			Uninit();
+			return;
+		}
+
+		break;
+	}
 	default:
 		assert(false);
 		break;
@@ -201,6 +266,22 @@ void CFlower::Draw(CShader *pShader)
 {
 	// オブジェクト3Dの描画
 	CObject3D::Draw(pShader);
+}
+
+//============================================================
+//	状態取得処理
+//============================================================
+int CFlower::GetState(void) const
+{
+	return (int)m_state;
+}
+
+//============================================================
+//	半径取得処理
+//============================================================
+float CFlower::GetRadius(void) const
+{
+	return SIZE_FLOWER.x;
 }
 
 //============================================================
@@ -251,6 +332,15 @@ CFlower *CFlower::Create
 }
 
 //============================================================
+//	リスト取得処理
+//============================================================
+CListManager<CFlower> *CFlower::GetList(void)
+{
+	// オブジェクトリストを返す
+	return m_pList;
+}
+
+//============================================================
 //	ランダム生成処理
 //============================================================
 void CFlower::RandomSpawn(const int nNum)
@@ -281,12 +371,4 @@ void CFlower::RandomSpawn(const int nNum)
 		// 花オブジェクトの生成
 		CFlower::Create(posSet, rotSet);
 	}
-}
-
-//============================================================
-//	総数取得処理
-//============================================================
-int CFlower::GetNumAll(void)
-{
-	return m_nNumAll;
 }
