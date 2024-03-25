@@ -15,6 +15,8 @@
 #include "renderer.h"
 #include "stage.h"
 #include "particle3D.h"
+#include "sceneGame.h"
+#include "gameManager.h"
 
 //************************************************************
 //	’è”éŒ¾
@@ -266,6 +268,9 @@ bool CFire::UpdateDelete(void)
 
 		// ‰ŠÁ‚·
 		Uninit();
+
+		// ‘SÄó‘Ô‚É‚·‚é
+		CSceneGame::GetGameManager()->SetBurn();
 
 		return true;
 	}
