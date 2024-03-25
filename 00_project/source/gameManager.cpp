@@ -328,6 +328,9 @@ void CGameManager::TransitionResult(void)
 	// リザルト情報を保存
 	GET_RETENTION->SetResult(CSceneGame::GetTimerUI()->Get());
 
+	// リザルト情報を保存
+	GET_RETENTION->SetScore(CSceneGame::GetScoreUI()->GetNum());
+
 	// リザルト画面に遷移
 	GET_MANAGER->SetScene(CScene::MODE_RESULT, GAMEEND_WAIT_FRAME);
 }

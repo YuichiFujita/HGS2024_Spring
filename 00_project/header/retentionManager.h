@@ -17,15 +17,6 @@
 class CRetentionManager
 {
 public:
-	// 勝利列挙
-	enum EWin
-	{
-		WIN_NONE,	// 無し
-		WIN_FAILED,	// 勝利失敗
-		WIN_CLEAR,	// 勝利成功
-		WIN_MAX		// この列挙型の総数
-	};
-
 	// コンストラクタ
 	CRetentionManager();
 
@@ -35,7 +26,7 @@ public:
 	// リザルト情報構造体
 	struct SResult
 	{
-		long nScore;	// 経過タイム
+		int nScore;	// 経過タイム
 		long nTime;	// 経過タイム
 	};
 
@@ -48,15 +39,14 @@ public:
 	static void Release(CRetentionManager *&prRetentionManager);	// 破棄
 
 	// メンバ関数
-	void SetScore(const long Score);	// リザルト情報設定
-	int GetScore(void) const { return m_Score.nScore; }	// リザルト情報取得
+	void SetScore(const int Score);	// リザルト情報設定
+	int GetScore(void) const { return m_result.nScore; }	// リザルト情報取得
 	void SetResult(const long nTime);	// リザルト情報設定
 	int GetResult(void) const { return m_result.nTime; }	// リザルト情報取得
 
 private:
 	// メンバ変数
 	SResult m_result;	// リザルト情報
-	SResult m_Score;	// リザルト情報
 };
 
 #endif	// _RETENTION_MANAGER_H_
