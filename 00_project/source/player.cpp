@@ -175,7 +175,7 @@ void CPlayer::UpdateShot()
 			D3DXVECTOR3((sinf(-Rot.z) * 80.0f) + Pos.x, (cosf(Rot.z) * 80.0f) + Pos.y, Pos.z), 
 			50.0f,
 			CEffect3D::EType::TYPE_BUBBLE,
-			60,
+			10,
 			D3DXVECTOR3(sinf(-Rot.z) * ShotPower, cosf(Rot.z) * ShotPower, 0.0f));
 
 		ShotPower = DEF_SHOTPOWER;

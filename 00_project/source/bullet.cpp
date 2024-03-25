@@ -94,6 +94,11 @@ void CBullet::Update(void)
 	);
 
 	CollisionFire();
+
+	if (m_nLife <= 0)
+	{
+		Uninit();
+	}
 }
 
 //============================================================
