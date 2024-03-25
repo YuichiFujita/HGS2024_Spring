@@ -50,8 +50,13 @@ public:
 	static void Release(CGameManager *&prGameManager);	// 破棄
 
 private:
+	// メンバ関数
+	void SpownManager(void);				//敵生成の管理
+
 	// メンバ変数
 	EState m_state;	// 状態
+	int Spownlevel;	// 敵生成のレベル
+	int SpownCount;	// 敵生成のカウント
 };
 
 #endif	// _GAMEMANAGER_H_

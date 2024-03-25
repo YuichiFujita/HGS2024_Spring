@@ -24,6 +24,7 @@ class CCinemaScope;	// シネマスコープクラス
 class CPause;		// ポーズクラス
 class CHitStop;		// ヒットストップクラス
 class CFlash;		// フラッシュクラス
+class CMultiValue;	// スコアクラス
 
 //************************************************************
 //	クラス定義
@@ -46,6 +47,7 @@ public:
 
 	// 静的メンバ関数
 	static CGameManager	*GetGameManager(void);	// ゲームマネージャー取得
+	static CMultiValue	*GetScoreUI(void);		// スコアUI取得
 	static CTimerUI		*GetTimerUI(void);		// タイマーUI取得
 	static CCinemaScope	*GetCinemaScope(void);	// シネマスコープ取得
 	static CPause		*GetPause(void);		// ポーズ取得
@@ -55,6 +57,7 @@ public:
 private:
 	// 静的メンバ変数
 	static CGameManager	*m_pGameManager;	// ゲームマネージャー
+	static CMultiValue	*m_pScoreUI;		// スコアUI
 	static CTimerUI		*m_pTimerUI;		// タイマーUI
 	static CCinemaScope	*m_pCinemaScope;	// シネマスコープ
 	static CPause		*m_pPause;			// ポーズ
