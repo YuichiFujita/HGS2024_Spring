@@ -167,7 +167,7 @@ void CPlayer::UpdateShot()
 		ShotPower = 0;
 
 
-		//スコア確認のデバッグ
+		////スコア確認のデバッグ
 		//CMultiValue *pScore = CSceneGame::GetScoreUI();
 		//pScore->AddNum(1);
 	}

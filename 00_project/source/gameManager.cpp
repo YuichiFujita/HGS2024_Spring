@@ -19,6 +19,7 @@
 #include "player.h"
 #include "multiModel.h"
 #include "effect3D.h"
+#include "fire.h"
 
 //************************************************************
 //	定数宣言
@@ -28,8 +29,8 @@ namespace
 	const int GAMEEND_WAIT_FRAME = 180;	// リザルト画面への遷移余韻フレーム
 
 	const int SPOWN_NUM = 2;	// 初期の生成数
-	const int SPOWN_RAND_POSX = 100;	// 幅のランダム生成範囲
-	const float SPOWN_POSY = 500.0f;	// 幅のランダム生成範囲
+	const int SPOWN_RAND_POSX = 300;	// 幅のランダム生成範囲
+	const float SPOWN_POSY = 1000.0f;	// 幅のランダム生成範囲
 }
 
 //************************************************************
@@ -125,18 +126,16 @@ void CGameManager::SpownManager()
 		{
 			float frandPos = (float)(rand() % SPOWN_RAND_POSX + 1);
 
-			CEffect3D::Create
+			CFire::Create
 			(
+				CFire::EType::TYPE_NORMAL,
+				1.0f,
 				D3DXVECTOR3
 				(
 					frandPos - ((float)SPOWN_RAND_POSX * 0.5f),
 					SPOWN_POSY,
 					0.0f
-				),
-				10.0f,
-				CEffect3D::EType::TYPE_NORMAL,
-				300,
-				D3DXVECTOR3(0.0f, -1.0f, 0.0f)
+				)
 			);
 		}
 	}
