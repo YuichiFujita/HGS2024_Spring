@@ -28,6 +28,7 @@ public:
 		TYPE_NORMAL = 0,	// 真っ直ぐ
 		TYPE_FLUFFY,		// ふわふわ
 		TYPE_FAST,			// 早い
+		TYPE_MOVE,			// 早い
 		TYPE_MAX			// この列挙型の総数
 	};
 
@@ -56,8 +57,8 @@ public:
 	);
 
 	// メンバ関数
-	void SetMovePosition(const D3DXVECTOR3& rMove);	// 位置移動量設定
-	D3DXVECTOR3 GetMovePosition(void) const;		// 位置移動量取得
+	virtual void SetMovePosition(const D3DXVECTOR3& rMove);	// 位置移動量設定
+	D3DXVECTOR3 GetMovePosition(void) const;	// 位置移動量取得
 
 	void SetMoveSpeed(const float& fSpeed) { m_fSpeed = fSpeed; }	// 速度設定
 	float GetMoveSpeed(void) { return m_fSpeed; }					// 速度取得
