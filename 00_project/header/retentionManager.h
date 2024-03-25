@@ -35,6 +35,7 @@ public:
 	// リザルト情報構造体
 	struct SResult
 	{
+		long nScore;	// 経過タイム
 		long nTime;	// 経過タイム
 	};
 
@@ -47,12 +48,15 @@ public:
 	static void Release(CRetentionManager *&prRetentionManager);	// 破棄
 
 	// メンバ関数
+	void SetScore(const long Score);	// リザルト情報設定
+	int GetScore(void) const { return m_Score.nScore; }	// リザルト情報取得
 	void SetResult(const long nTime);	// リザルト情報設定
-	SResult GetResult(void) const { return m_result; }	// リザルト情報取得
+	int GetResult(void) const { return m_result.nTime; }	// リザルト情報取得
 
 private:
 	// メンバ変数
 	SResult m_result;	// リザルト情報
+	SResult m_Score;	// リザルト情報
 };
 
 #endif	// _RETENTION_MANAGER_H_

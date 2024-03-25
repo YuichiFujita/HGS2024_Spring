@@ -11,6 +11,7 @@
 #include "fireNormal.h"
 #include "fireFast.h"
 #include "fireFluffy.h"
+#include "fireMove.h"
 #include "manager.h"
 #include "renderer.h"
 #include "stage.h"
@@ -173,6 +174,13 @@ CFire *CFire::Create
 
 		// ^‚Á’¼‚®‰Š‚ğ¶¬
 		pFire = new CFireFast(type);
+
+		break;
+
+	case TYPE_MOVE:
+
+		// ^‚Á’¼‚®‰Š‚ğ¶¬
+		pFire = new CFireMove(type);
 
 		break;
 

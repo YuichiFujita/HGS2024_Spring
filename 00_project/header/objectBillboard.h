@@ -81,6 +81,8 @@ public:
 	ERotate GetRotate(void) const;			// 回転取得
 	CRenderState *GetRenderState(void);		// レンダーステート情報取得
 
+	void SetScale(bool Set) { m_bScale = Set; }
+
 protected:
 	// メンバ関数
 	void SetVtx(void);	// 頂点情報の設定
@@ -106,6 +108,8 @@ private:
 	float m_fAngle;			// 対角線の角度
 	float m_fLength;		// 対角線の長さ
 	int   m_nTextureID;		// テクスチャインデックス
+	bool   m_bScale;		//拡大縮小を行うか
+	int   m_nScaleCount;		//拡大縮小を行うか
 };
 
 #endif	// _OBJECTBILLBOARD_H_

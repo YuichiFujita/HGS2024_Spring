@@ -73,6 +73,8 @@ HRESULT CObjectBillboard::Init(void)
 	m_fAngle		= 0.0f;				// 対角線の角度
 	m_fLength		= 0.0f;				// 対角線の長さ
 	m_nTextureID	= NONE_IDX;			// テクスチャインデックス
+	m_bScale = false;
+	m_nScaleCount = 0;
 
 	// 頂点バッファの生成
 	if (FAILED(pDevice->CreateVertexBuffer
@@ -131,6 +133,36 @@ void CObjectBillboard::Uninit(void)
 //============================================================
 void CObjectBillboard::Update(void)
 {
+	if (m_bScale == true)
+	{
+		m_nScaleCount++;
+
+		if (m_nScaleCount > 50)
+		{
+			// 大きさを設定
+			SetVec3Sizing(D3DXVECTOR3(
+				sinf((float)m_nScaleCount * D3DX_PI * 0.01f) * 50.0f,
+				sinf((float)m_nScaleCount * D3DX_PI * 0.01f) * 50.0f,
+				0.0f)
+			);
+		}
+		else
+		{
+			// 大きさを設定
+			SetVec3Sizing(D3DXVECTOR3(
+				sinf((float)m_nScaleCount * D3DX_PI * 0.02f) * 50.0f,
+				sinf((float)m_nScaleCount * D3DX_PI * 0.02f) * 50.0f,
+				0.0f)
+			);
+		}
+
+		if (m_nScaleCount > 50)
+		{
+			Uninit();
+			return;
+		}
+	}
+
 	// 頂点情報の設定
 	SetVtx();
 }

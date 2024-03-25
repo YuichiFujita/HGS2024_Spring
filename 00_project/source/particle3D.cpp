@@ -519,9 +519,9 @@ void CParticle3D::StompPlant(const D3DXVECTOR3& rPos, const D3DXCOLOR& rCol)
 	{ // 生成されるエフェクト数分繰り返す
 
 		// ベクトルをランダムに設定
-		move.x = sinf((float)(rand() % 629 - 314) / 100.0f) * 1.0f;
-		move.y = cosf((float)(rand() % 629 - 314) / 100.0f) * 1.0f;
-		move.z = cosf((float)(rand() % 629 - 314) / 100.0f) * 1.0f;
+		move.x = sinf((D3DX_PI * 0.25f) * nCntPart) * 1.0f;
+		move.y = cosf((D3DX_PI * 0.25f) * nCntPart) * 1.0f;
+		move.z = 0.0f;
 
 		// ベクトルを正規化
 		D3DXVec3Normalize(&move, &move);

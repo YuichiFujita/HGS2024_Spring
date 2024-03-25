@@ -26,6 +26,8 @@
 #include "flower.h"
 #include "collision.h"
 #include "stage.h"
+#include "multiValue.h"
+#include "pause.h"
 
 //************************************************************
 //	定数宣言
@@ -74,6 +76,9 @@ HRESULT CGameManager::Init(void)
 	//生成カウントを初期化
 	SpownCount = 0;
 
+	// 花生成カウント
+	nFlowerCount = 0;
+
 	// 中心からの燃え広がり量
 	m_fMoveBurn = 0.0f;
 
@@ -115,7 +120,11 @@ void CGameManager::Update(void)
 		break;
 
 	case STATE_NORMAL:
-		SpownManager();
+		if (!CSceneGame::GetPause()->IsPause())
+		{
+			SpownManager();
+			CSceneGame::GetScoreUI()->SetNum(CFlower::GetList()->GetNumAll());
+		}
 		break;
 
 	default:	// 例外処理
@@ -129,6 +138,11 @@ void CGameManager::Update(void)
 //============================================================
 void CGameManager::SetBurn(void)
 {
+	if (m_state != STATE_NORMAL) { return; }
+
+	// タイマー計測終了
+	CSceneGame::GetTimerUI()->End();
+
 	// カメラ揺れを設定
 	GET_MANAGER->GetCamera()->SetSwing(CCamera::TYPE_MAIN, CCamera::SSwing(10.0f, 1.5f, 0.3f));
 
@@ -241,9 +255,9 @@ void CGameManager::InitBurnManager(void)
 	{ // ヒットストップが終わったら
 
 		// 波動生成
-		CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 120.0f, 0.0f), VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(70.0f, 14.0f, 0.02f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
+		CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 80.0f, 0.0f), VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(18.0f, 14.0f, 0.01f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
 		//CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 90.0f, 0.0f),  VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(40.0f, 12.0f, 0.03f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
-		CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 60.0f, 0.0f),  VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(10.0f, 10.0f, 0.04f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
+		CWave::Create(CWave::TEXTURE_IMPACT, D3DXVECTOR3(0.0f, 40.0f, 0.0f),  VEC3_ZERO, D3DXCOLOR(1.0f, 0.15f, 0.025f, 0.7f), CWave::SGrow(3.0f, 10.0f, 0.015f), POSGRID2(32, 1), ring::TEX_PART, ring::HOLE_RADIUS, ring::THICKNESS, 40.0f);
 
 		// 全焼開始
 		m_state = STATE_BURN;

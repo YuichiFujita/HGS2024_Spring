@@ -100,3 +100,12 @@ void CRetentionManager::SetResult(const long nTime)
 	// 引数の経過タイムを設定
 	m_result.nTime = nTime;
 }
+
+//============================================================
+//	リザルト情報の設定処理
+//============================================================
+void CRetentionManager::SetScore(const long Score)
+{
+	// 引数の経過タイムを設定
+	m_result.nScore = Score;
+}

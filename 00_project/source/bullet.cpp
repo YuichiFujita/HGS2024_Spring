@@ -22,6 +22,8 @@
 #include "field.h"
 #include "stage.h"
 #include "particle3D.h"
+#include "multiValue.h"
+#include "flower.h"
 
 //************************************************************
 //	定数宣言
@@ -60,6 +62,7 @@ HRESULT CBullet::Init(void)
 {
 	m_pos = VEC3_ZERO;	// 位置
 	m_move = VEC3_ZERO;	// 移動量
+	m_Kill = 0;
 
 	// 成功を返す
 	return S_OK;
@@ -98,6 +101,12 @@ void CBullet::Update(void)
 	if (m_nLife <= 0)
 	{
 		Uninit();
+		return;
+	}
+	if (m_pos.y < 0)
+	{
+		Uninit();
+		return;
 	}
 }
 
@@ -130,6 +139,55 @@ void CBullet::CollisionFire(void)
 					if (collision::Circle3D(m_pos, posFire, 25.0f, 25.0f) == true)
 					{
 						CParticle3D::Create(CParticle3D::TYPE_STOMP_PLANT, posFire);
+
+						m_Kill++;
+						useful::LimitMaxNum(m_Kill, 5);
+
+						m_pScoreBG = CObjectBillboard::Create(posFire, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+						m_pScoreBG->SetScale(true);
+						m_pScoreBG->SetPriority(5);
+
+						// レンダーステートの情報を取得
+						CRenderState *pRenderState = m_pScoreBG->GetRenderState();
+
+						// Zテストの設定
+						pRenderState->SetZFunc(D3DCMP_ALWAYS);
+
+						// Zバッファの使用状況の設定
+						pRenderState->SetZUpdate(false);
+
+						// αテストを有効にする
+						pRenderState->SetAlphaTest(true);			// αテストの有効 / 無効の設定
+						pRenderState->SetAlphaFunc(D3DCMP_GREATER);	// αテストの設定
+						pRenderState->SetAlphaNumRef(160);			// αテストの参照値設定
+
+						switch (m_Kill)
+						{
+						case 1:
+							m_pScoreBG->BindTexture("data\\TEXTURE\\score1.png");
+							break;
+						case 2:
+							m_pScoreBG->BindTexture("data\\TEXTURE\\score2.png");
+							break;
+						case 3:
+							m_pScoreBG->BindTexture("data\\TEXTURE\\score3.png");
+							break;
+						case 4:
+							m_pScoreBG->BindTexture("data\\TEXTURE\\score4.png");
+							break;
+						default:
+							m_pScoreBG->BindTexture("data\\TEXTURE\\score5.png");
+							break;
+						}
+						m_pScoreBG->SetLabel(CObject::ELabel::LABEL_UI);
+
+						//スコア加算
+						CMultiValue* pScore = CSceneGame::GetScoreUI();
+						pScore->AddNum(m_Kill);
+
+						// 花はやし
+						CFlower::RandomSpawn(m_Kill);
+
 						pObjCheck->Uninit();
 					}
 				}

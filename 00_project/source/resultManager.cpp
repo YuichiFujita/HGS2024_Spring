@@ -97,6 +97,7 @@ CResultManager::CResultManager() :
 {
 	// メンバ変数をクリア
 	memset(&m_apResult[0], 0, sizeof(m_apResult));		// リザルト表示の情報
+	memset(&m_apScore[0], 0, sizeof(m_apScore));		// リザルト表示の情報
 	memset(&m_apContinue[0], 0, sizeof(m_apContinue));	// コンテニュー表示の情報
 }
 
@@ -130,6 +131,7 @@ HRESULT CResultManager::Init(void)
 
 	// メンバ変数を初期化
 	memset(&m_apResult[0], 0, sizeof(m_apResult));		// リザルト表示の情報
+	memset(&m_apScore[0], 0, sizeof(m_apScore));		// リザルト表示の情報
 	memset(&m_apContinue[0], 0, sizeof(m_apContinue));	// コンテニュー表示の情報
 	m_pContLogo		= nullptr;		// コンテニューロゴの情報
 	m_pTimeLogo		= nullptr;		// タイムロゴの情報
@@ -190,6 +192,30 @@ HRESULT CResultManager::Init(void)
 		m_apResult[nCntResult]->SetEnableDraw(false);
 	}
 
+	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
+	{ // リザルト表示の総数分繰り返す
+
+		// リザルト表示の生成
+		m_apScore[nCntResult] = CObject2D::Create
+		( // 引数
+			aPosResult[nCntResult],			// 位置
+			SIZE_RESULT * SET_RESULT_SCALE	// 大きさ
+		);
+		if (m_apScore[nCntResult] == nullptr)
+		{ // 生成に失敗した場合
+
+			// 失敗を返す
+			assert(false);
+			return E_FAIL;
+		}
+
+		// 優先順位を設定
+		m_apScore[nCntResult]->SetPriority(PRIORITY);
+
+		// 描画をしない設定にする
+		m_apScore[nCntResult]->SetEnableDraw(false);
+	}
+
 	// リザルト表示のテクスチャを設定
 	SetTexResult();
 
@@ -248,7 +274,7 @@ HRESULT CResultManager::Init(void)
 	m_pTime->SetEnableDraw(false);
 
 	// タイムを設定
-	if (!m_pTime->SetMSec(GET_RETENTION->GetResult().nTime))
+	if (!m_pTime->SetMSec(GET_RETENTION->GetResult()))
 	{ // 設定に失敗した場合
 
 		// 失敗を返す
@@ -332,6 +358,14 @@ void CResultManager::Uninit(void)
 
 		// リザルト表示の終了
 		SAFE_UNINIT(m_apResult[nCntResult]);
+	}
+
+
+	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
+	{ // リザルト表示の総数分繰り返す
+
+		// リザルト表示の終了
+		SAFE_UNINIT(m_apScore[nCntResult]);
 	}
 
 	for (int nCntResult = 0; nCntResult < SELECT_MAX; nCntResult++)
@@ -458,6 +492,13 @@ void CResultManager::Update(void)
 		m_apResult[nCntResult]->Update();
 	}
 
+	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
+	{ // リザルト表示の総数分繰り返す
+
+		// リザルト表示の更新
+		m_apScore[nCntResult]->Update();
+	}
+
 	for (int nCntResult = 0; nCntResult < SELECT_MAX; nCntResult++)
 	{ // 選択肢の総数分繰り返す
 
@@ -547,6 +588,13 @@ void CResultManager::UpdateFade(void)
 			m_apResult[nCntResult]->SetEnableDraw(true);
 		}
 
+		for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
+		{ // リザルト表示の総数分繰り返す
+
+			// リザルト表示の描画開始
+			m_apScore[nCntResult]->SetEnableDraw(true);
+		}
+
 		// リザルト表示の拡大率を設定
 		m_fScale = SET_RESULT_SCALE;
 
@@ -575,6 +623,13 @@ void CResultManager::UpdateResult(void)
 			// リザルト表示の大きさを設定
 			m_apResult[nCntResult]->SetVec3Sizing(SIZE_RESULT * m_fScale);
 		}
+
+		for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
+		{ // リザルト表示の総数分繰り返す
+
+			// リザルト表示の大きさを設定
+			m_apScore[nCntResult]->SetVec3Sizing(SIZE_RESULT * m_fScale);
+		}
 	}
 	else
 	{ // 拡大率が最小値以下の場合
@@ -584,6 +639,13 @@ void CResultManager::UpdateResult(void)
 
 			// リザルト表示の大きさを設定
 			m_apResult[nCntResult]->SetVec3Sizing(SIZE_RESULT);
+		}
+
+		for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
+		{ // リザルト表示の総数分繰り返す
+
+			// リザルト表示の大きさを設定
+			m_apScore[nCntResult]->SetVec3Sizing(SIZE_RESULT);
 		}
 
 		// 状態を変更
@@ -788,6 +850,17 @@ void CResultManager::SkipStaging(void)
 		m_apResult[nCntResult]->SetVec3Sizing(SIZE_RESULT);
 	}
 
+	// リザルト表示の描画をONにし、大きさを設定
+	for (int nCntResult = 0; nCntResult < result::NUM_POLYGON; nCntResult++)
+	{ // リザルト表示の総数分繰り返す
+
+		// リザルト表示の描画開始
+		m_apScore[nCntResult]->SetEnableDraw(true);
+
+		// リザルト表示の大きさを設定
+		m_apScore[nCntResult]->SetVec3Sizing(SIZE_RESULT);
+	}
+
 	// タイム表示をONにする
 	m_pTimeLogo->SetEnableDraw(true);
 	m_pTime->SetEnableDraw(true);
@@ -830,6 +903,9 @@ void CResultManager::SetTexResult(void)
 
 	// MISSIONテクスチャを登録・割当
 	m_apResult[0]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_MISSION]));
+
+	// MISSIONテクスチャを登録・割当
+	m_apScore[0]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_MISSION]));
 
 	//// RESULTテクスチャを登録・割当
 	//m_apResult[1]->BindTexture(pTexture->Regist(TEXTURE_FILE[TEXTURE_CLEAR]));
