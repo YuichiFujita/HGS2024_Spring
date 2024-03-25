@@ -27,13 +27,16 @@
 //************************************************************
 namespace
 {
-	const char *TEXTURE_FILE = "data\\TEXTURE\\flower000.jpg";	// 花テクスチャファイル
+	const char *TEXTURE_FILE = "data\\TEXTURE\\flower000.png";	// 花テクスチャファイル
 
 	const int		  PRIORITY		= 2;	// 花の優先順位
 	const D3DXVECTOR3 SIZE_FLOWER	= D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// 半径
 
 	const float		  SHADOW_ALPHA	= 0.2f;	// 影のα値
 	const D3DXVECTOR3 SHADOW_SIZE = D3DXVECTOR3(80.0f, 0.0f, 80.0f);	// 影の大きさ
+
+	const float SPAWN_ALPHA	= 0.65f;	// 花の生成時透明度
+	const float GLOW_SPEED	= 2.0f;		// 花の生える速度
 }
 
 //************************************************************
@@ -42,10 +45,11 @@ namespace
 //============================================================
 //	コンストラクタ
 //============================================================
-CFlower::CFlower() : CObject3D(CObject::LABEL_FLOWER, CObject::DIM_3D, PRIORITY)
+CFlower::CFlower() : CObject3D(CObject::LABEL_FLOWER, CObject::DIM_3D, PRIORITY),
+	m_pShadow	(nullptr),		// 影の情報
+	m_state		(EState::NONE)	// 状態
 {
-	// メンバ変数をクリア
-	m_pShadow = nullptr;	// 影の情報
+
 }
 
 //============================================================
@@ -62,7 +66,8 @@ CFlower::~CFlower()
 HRESULT CFlower::Init(void)
 {
 	// メンバ変数を初期化
-	m_pShadow = nullptr;	// 影の情報
+	m_pShadow = nullptr;		// 影の情報
+	m_state = EState::SPAWN;	// 状態
 
 	// 影の生成
 	m_pShadow = CShadow::Create(CShadow::TEXTURE_NORMAL, SHADOW_SIZE, this, SHADOW_ALPHA, SHADOW_ALPHA);
@@ -91,6 +96,10 @@ HRESULT CFlower::Init(void)
 
 	// 大きさを設定
 	SetVec3Sizing(SIZE_FLOWER);
+
+	// 透明度を設定
+	D3DXCOLOR col = GetColor();
+	SetColor(D3DXCOLOR(col.r, col.g, col.b, SPAWN_ALPHA));
 
 	// レンダーステートの情報を取得
 	CRenderState *pRenderState = GetRenderState();
@@ -135,9 +144,41 @@ void CFlower::Update(void)
 {
 	// 変数を宣言
 	D3DXVECTOR3 pos = GetVec3Position();	// 位置
+	float fLand = CScene::GetStage()->GetFieldPositionHeight(pos);	// 着地点
 
-	// 位置を求める
-	pos.y = CScene::GetStage()->GetFieldPositionHeight(pos);	// 高さを地面に設定
+	switch (m_state)
+	{ // 状態ごとの処理
+	case CFlower::NONE:
+
+		// 高さを地面に設定
+		pos.y = fLand;
+
+		break;
+
+	case CFlower::SPAWN:
+
+		// 地面からはやす
+		pos.y += GLOW_SPEED;
+		if (pos.y >= fLand)
+		{ // 位置が着地点を超えた場合
+
+			// 位置補正
+			pos.y = fLand;
+
+			// 透明度を設定
+			D3DXCOLOR col = GetColor();
+			SetColor(D3DXCOLOR(col.r, col.g, col.b, 1.0f));
+
+			// 何もしない状態にする
+			m_state = EState::NONE;
+		}
+
+		break;
+
+	default:
+		assert(false);
+		break;
+	}
 
 	// 位置を更新
 	SetVec3Position(pos);
@@ -190,11 +231,15 @@ CFlower *CFlower::Create
 		}
 
 		// 位置を設定
-		pos.y = CScene::GetStage()->GetFieldPositionHeight(pos);	// 高さを地面に設定
+		pos.y  = CScene::GetStage()->GetFieldPositionHeight(pos);	// 高さを地面に設定
+		pos.y -= SIZE_FLOWER.y;	// 地面に埋める
 		pFlower->SetVec3Position(pos);
 
 		// 向きを設定
 		pFlower->SetVec3Rotation(rRot);
+
+		// 影の描画情報を設定
+		pFlower->m_pShadow->SetDrawInfo();
 
 		// 確保したアドレスを返す
 		return pFlower;
@@ -223,7 +268,7 @@ void CFlower::RandomSpawn(const int nNum)
 		posSet.z = (float)(rand() % (nLimit * 2) - nLimit + 1);
 
 		// 生成位置を補正
-		collision::CirclePillar(posSet, posTarget, SIZE_FLOWER.x, pPlayer->GetRadius());	// ターゲット内部の生成防止
+		collision::CirclePillar(posSet, posTarget, SIZE_FLOWER.x, /*pPlayer->GetRadius()*/ 10.0f);	// ターゲット内部の生成防止
 		CScene::GetStage()->LimitPosition(posSet, SIZE_FLOWER.x);	// ステージ範囲外の生成防止
 
 		// 生成向きを設定
