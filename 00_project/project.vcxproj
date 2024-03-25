@@ -164,6 +164,8 @@
     <ClInclude Include="header\effect3D.h" />
     <ClInclude Include="header\fade.h" />
     <ClInclude Include="header\field.h" />
+    <ClInclude Include="header\fire.h" />
+    <ClInclude Include="header\fireNormal.h" />
     <ClInclude Include="header\flash.h" />
     <ClInclude Include="header\flower.h" />
     <ClInclude Include="header\gameManager.h" />
@@ -246,6 +248,8 @@
     <ClCompile Include="source\effect3D.cpp" />
     <ClCompile Include="source\fade.cpp" />
     <ClCompile Include="source\field.cpp" />
+    <ClCompile Include="source\fire.cpp" />
+    <ClCompile Include="source\fireNormal.cpp" />
     <ClCompile Include="source\flash.cpp" />
     <ClCompile Include="source\flower.cpp" />
     <ClCompile Include="source\gameManager.cpp" />

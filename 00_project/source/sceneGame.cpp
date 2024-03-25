@@ -21,6 +21,7 @@
 #include "stage.h"
 #include "player.h"
 #include "flower.h"
+#include "fire.h"
 #include "multiValue.h"
 
 //************************************************************
@@ -286,6 +287,10 @@ void CSceneGame::Update(void)
 	if (GET_INPUTKEY->IsTrigger(DIK_9))
 	{
 		CFlower::RandomSpawn(20);
+	}
+	if (GET_INPUTKEY->IsTrigger(DIK_8))
+	{
+		CFire::Create(CFire::TYPE_NORMAL, 1.0f, D3DXVECTOR3(0.0f, 600.0f, 0.0f));
 	}
 }
 
