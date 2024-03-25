@@ -18,7 +18,7 @@ namespace
 	{
 		{ "data\\BGM\\bgm_general.wav", -1 },	// BGM (汎用)
 		{ "data\\BGM\\bgm_tutorial.wav", -1 },	// BGM (チュートリアル)
-		{ "data\\BGM\\bgm_game.wav", -1 },		// BGM (ゲーム)
+		{ "data\\BGM\\Game02.wav", -1 },		// BGM (ゲーム)
 
 		{ "data\\SE\\select000.wav", 0 },		// 選択操作音00
 		{ "data\\SE\\select001.wav", 0 },		// 選択操作音01

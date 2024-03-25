@@ -166,8 +166,6 @@ void CGameManager::SetBurn(void)
 //============================================================
 void CGameManager::SpownManager()
 {
-	SpownCount++;
-
 	//ƒŒƒxƒ‹ŠÇ—
 	if (SpownCount != 0 && SpownCount % 1200 == 0)
 	{
@@ -243,7 +241,7 @@ void CGameManager::SpownManager()
 		}
 	}
 
-
+	SpownCount++;
 }
 
 //============================================================
