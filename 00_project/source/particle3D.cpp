@@ -21,6 +21,7 @@ namespace
 		0,	// なし
 		24,	// ダメージ
 		1,	// 回復
+		1,	// 植物踏みつぶし
 		1,	// 炎
 		1,	// 小爆発
 		1,	// 大爆発
@@ -154,6 +155,13 @@ namespace
 	}
 }
 
+// 植物踏みつぶし
+#define STOMP_MOVE		(2.5f)	// 植物踏みつぶしの移動量
+#define STOMP_SPAWN		(8)		// 植物踏みつぶしの生成数
+#define STOMP_EFF_LIFE	(28)	// 植物踏みつぶしの寿命
+#define STOMP_SIZE		(36.0f)	// 植物踏みつぶしの大きさ
+#define STOMP_SUB_SIZE	(0.05f)	// 植物踏みつぶしの半径の減算量
+
 //************************************************************
 //	スタティックアサート
 //************************************************************
@@ -240,6 +248,13 @@ void CParticle3D::Update(void)
 
 		// 回復
 		Heal(m_pos, m_col);
+
+		break;
+
+	case TYPE_STOMP_PLANT:
+
+		// 草
+		StompPlant(m_pos, m_col);
 
 		break;
 
@@ -487,6 +502,53 @@ void CParticle3D::Heal(const D3DXVECTOR3& rPos, const D3DXCOLOR& rCol)
 			heal::SUB_SIZE,			// 半径の減算量
 			heal::BLEND,			// 加算合成状況
 			LABEL_PARTICLE			// オブジェクトラベル
+		);
+	}
+}
+
+//============================================================
+//	植物踏みつぶし
+//============================================================
+void CParticle3D::StompPlant(const D3DXVECTOR3& rPos, const D3DXCOLOR& rCol)
+{
+	// 変数を宣言
+	D3DXVECTOR3 move = VEC3_ZERO;	// 移動量の代入用
+	D3DXVECTOR3 rot = VEC3_ZERO;	// 向きの代入用
+
+	for (int nCntPart = 0; nCntPart < STOMP_SPAWN; nCntPart++)
+	{ // 生成されるエフェクト数分繰り返す
+
+		// ベクトルをランダムに設定
+		move.x = sinf((float)(rand() % 629 - 314) / 100.0f) * 1.0f;
+		move.y = cosf((float)(rand() % 629 - 314) / 100.0f) * 1.0f;
+		move.z = cosf((float)(rand() % 629 - 314) / 100.0f) * 1.0f;
+
+		// ベクトルを正規化
+		D3DXVec3Normalize(&move, &move);
+
+		// 移動量を設定
+		move.x *= STOMP_MOVE;
+		move.y *= STOMP_MOVE;
+		move.z *= STOMP_MOVE;
+
+		// 向きを設定
+		rot.x = 0.0f;
+		rot.y = 0.0f;
+		rot.z = (float)(rand() % 629 - 314) / 100.0f;
+
+		// エフェクト3Dオブジェクトの生成
+		CEffect3D::Create
+		( // 引数
+			rPos,						// 位置
+			STOMP_SIZE,					// 半径
+			CEffect3D::TYPE_LEAF,		// テクスチャ
+			STOMP_EFF_LIFE,				// 寿命
+			move,						// 移動量
+			rot,						// 向き
+			rCol,						// 色
+			STOMP_SUB_SIZE,				// 半径の減算量
+			CRenderState::BLEND_NORMAL,	// 加算合成状況
+			LABEL_PARTICLE				// オブジェクトラベル
 		);
 	}
 }

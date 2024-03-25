@@ -129,6 +129,7 @@ void CBullet::CollisionFire(void)
 
 					if (collision::Circle3D(m_pos, posFire, 25.0f, 25.0f) == true)
 					{
+						CParticle3D::Create(CParticle3D::TYPE_STOMP_PLANT, posFire);
 						pObjCheck->Uninit();
 					}
 				}
