@@ -21,9 +21,9 @@ namespace ranking
 //************************************************************
 //	前方宣言
 //************************************************************
-class CObject2D;		// オブジェクト2Dクラス
-class CAnim2D;			// アニメーション2Dクラス
-class CTimerManager;	// タイマーマネージャークラス
+class CObject2D;	// オブジェクト2Dクラス
+class CAnim2D;		// アニメーション2Dクラス
+class CMultiValue;	// マルチ数字クラス
 
 //************************************************************
 //	クラス定義
@@ -47,8 +47,8 @@ public:
 		STATE_FADEIN,		// フェードイン状態
 		STATE_LOGO,			// ランキングロゴ表示状態
 		STATE_RANK,			// 順位表示状態
-		STATE_TIME_WAIT,	// クリアタイム表示待機状態
-		STATE_TIME,			// クリアタイム表示状態
+		STATE_SCORE_WAIT,	// 花スコア表示待機状態
+		STATE_SCORE,		// 花スコア表示状態
 		STATE_WAIT,			// 遷移待機状態
 		STATE_MAX			// この列挙型の総数
 	};
@@ -79,25 +79,25 @@ private:
 	void InitRank(void);		// 順位表示の初期化
 	void UpdateRank(void);		// 順位表示の更新
 	void RevisionRank(void);	// 順位表示の補正
-	void InitTime(void);		// クリアタイム表示の初期化
-	void UpdateTime(void);		// クリアタイム表示の更新
-	void RevisionTime(void);	// クリアタイム表示の補正
+	void InitScore(void);		// 花スコア表示の初期化
+	void UpdateScore(void);		// 花スコア表示の更新
+	void RevisionScore(void);	// 花スコア表示の補正
 	void UpdateTransition(void);			// 遷移決定
 	void SkipStaging(void);					// 演出スキップ
 	bool UpdateDrawWait(const int nWait);	// 表示待機
 
 	// 静的メンバ関数
-	static void Sort(const long nValue);		// ソート
-	static void SetNewRank(const long nValue);	// スコア変動インデックス設定
+	static void Sort(const int nValue);			// ソート
+	static void SetNewRank(const int nValue);	// スコア変動インデックス設定
 	static void Save(void);		// 保存
 	static void Load(void);		// 読込
 
 	// 静的メンバ変数
-	static long m_aRanking[ranking::NUM_DISP];	// ランキング情報
+	static int m_aRanking[ranking::NUM_DISP];	// ランキング情報
 	static int m_nNewRankID;	// 変動したスコアのインデックス
 
 	// メンバ変数
-	CTimerManager *m_apTime[ranking::NUM_DISP];	// クリアタイムの情報
+	CMultiValue *m_apScore[ranking::NUM_DISP];	// 花スコアの情報
 	CAnim2D *m_apRank[ranking::NUM_DISP];		// 順位の情報
 	CObject2D *m_pLogo;		// ランキングロゴの情報
 	CObject2D *m_pFade;		// フェードの情報

@@ -15,7 +15,7 @@
 #include "texture.h"
 #include "object2D.h"
 #include "anim2D.h"
-#include "timerManager.h"
+#include "multiValue.h"
 #include "retentionManager.h"
 
 //************************************************************
@@ -66,8 +66,8 @@ namespace
 		const float		ADD_ALPHA	= 0.02f;		// α値の加算量
 	}
 
-	// クリアタイム基本情報
-	namespace time
+	// 花スコア基本情報
+	namespace score
 	{
 		const D3DXVECTOR3 POS			= D3DXVECTOR3(485.0f, 250.0f, 0.0f);	// クリアタイム表示の位置
 		const D3DXVECTOR3 SPACE			= D3DXVECTOR3(0.0f, 100.0f, 0.0f);		// クリアタイム表示の空白
@@ -86,7 +86,7 @@ namespace
 //************************************************************
 //	静的メンバ変数宣言
 //************************************************************
-long CRankingManager::m_aRanking[ranking::NUM_DISP] = { 0 };	// ランキング情報
+int CRankingManager::m_aRanking[ranking::NUM_DISP] = { 0 };	// ランキング情報
 int CRankingManager::m_nNewRankID = NONE_IDX;	// 変動したスコアのインデックス
 
 //************************************************************
@@ -109,8 +109,8 @@ CRankingManager::CRankingManager() :
 	m_nCounterDraw	(0)			// 描画管理カウンター
 {
 	// メンバ変数をクリア
-	memset(&m_apTime[0], 0, sizeof(m_apTime));	// クリアタイムの情報
-	memset(&m_apRank[0], 0, sizeof(m_apRank));	// 順位の情報
+	memset(&m_apScore[0], 0, sizeof(m_apScore));	// 花スコアの情報
+	memset(&m_apRank[0], 0, sizeof(m_apRank));		// 順位の情報
 }
 
 //============================================================
@@ -127,14 +127,14 @@ CRankingManager::~CRankingManager()
 HRESULT CRankingManager::Init(void)
 {
 	// メンバ変数を初期化
-	memset(&m_apTime[0], 0, sizeof(m_apTime));	// クリアタイムの情報
-	memset(&m_apRank[0], 0, sizeof(m_apRank));	// 順位の情報
-	m_pLogo		= nullptr;						// ランキングロゴの情報
-	m_pFade		= nullptr;						// フェードの情報
-	m_state		= STATE_FADEIN;					// 状態
-	m_fScale	= 0.0f;							// ポリゴン拡大率
-	m_nCounterState	= 0;						// 状態管理カウンター
-	m_nCounterDraw	= ranking::NUM_DISP - 1;	// 描画管理カウンター
+	memset(&m_apScore[0], 0, sizeof(m_apScore));	// 花スコアの情報
+	memset(&m_apRank[0], 0, sizeof(m_apRank));		// 順位の情報
+	m_pLogo		= nullptr;							// ランキングロゴの情報
+	m_pFade		= nullptr;							// フェードの情報
+	m_state		= STATE_FADEIN;						// 状態
+	m_fScale	= 0.0f;								// ポリゴン拡大率
+	m_nCounterState	= 0;							// 状態管理カウンター
+	m_nCounterDraw	= ranking::NUM_DISP - 1;		// 描画管理カウンター
 
 	// ランキング読込
 	Load();
@@ -224,20 +224,19 @@ HRESULT CRankingManager::Init(void)
 		m_apRank[nCntRank]->SetPattern(nCntRank);
 
 		//----------------------------------------------------
-		//	クリアタイム表示の生成・設定
+		//	花スコア表示の生成・設定
 		//----------------------------------------------------
-		// クリアタイム表示の生成
-		m_apTime[nCntRank] = CTimerManager::Create
+		// 花スコア表示の生成
+		m_apScore[nCntRank] = CMultiValue::Create
 		( // 引数
-			CTimerManager::TIME_SEC,						// 設定タイム
-			0,												// 制限時間
-			time::POS + (time::SPACE * (float)nCntRank),	// 位置
-			time::SIZE_VAL * time::SET_SCALE,				// 数字の大きさ
-			time::SIZE_PART * time::SET_SCALE,				// 区切りの大きさ
-			time::SPACE_VAL,								// 数字の空白
-			time::SPACE_PART								// 区切りの空白
+			CValue::TEXTURE_NORMAL,
+			m_aRanking[nCntRank],
+			3,
+			score::POS + (score::SPACE * (float)nCntRank),	// 位置
+			score::SIZE_VAL * score::SET_SCALE,				// 数字の大きさ
+			score::SPACE_VAL								// 数字の空白
 		);
-		if (m_apTime[nCntRank] == nullptr)
+		if (m_apScore[nCntRank] == nullptr)
 		{ // 非使用中の場合
 	
 			// 失敗を返す
@@ -246,28 +245,19 @@ HRESULT CRankingManager::Init(void)
 		}
 	
 		// 優先順位を設定
-		m_apTime[nCntRank]->SetPriority(PRIORITY);
+		m_apScore[nCntRank]->SetPriority(PRIORITY);
 	
 		// 描画をしない設定にする
-		m_apTime[nCntRank]->SetEnableDraw(false);
+		m_apScore[nCntRank]->SetEnableDraw(false);
 
 		if (m_nNewRankID == nCntRank)
 		{ // 値の変動があった場合
 
 			// 色を設定
-			m_apTime[nCntRank]->SetColor(COL_NEWRANK);
+			m_apScore[nCntRank]->SetColor(COL_NEWRANK);
 
 			// 変動したスコアのインデックスを初期化
 			m_nNewRankID = NONE_IDX;
-		}
-	
-		// タイムを設定
-		if (!m_apTime[nCntRank]->SetMSec(m_aRanking[nCntRank]))
-		{ // 設定に失敗した場合
-	
-			// 失敗を返す
-			assert(false);
-			return E_FAIL;
 		}
 	}
 
@@ -283,8 +273,8 @@ void CRankingManager::Uninit(void)
 	for (int nCntRank = 0; nCntRank < ranking::NUM_DISP; nCntRank++)
 	{ // ランキングの上位表示数分繰り返す
 
-		// クリアタイムの破棄
-		SAFE_REF_RELEASE(m_apTime[nCntRank]);
+		// 花スコアの破棄
+		SAFE_UNINIT(m_apScore[nCntRank]);
 
 		// 順位表示の終了
 		SAFE_UNINIT(m_apRank[nCntRank]);
@@ -331,22 +321,22 @@ void CRankingManager::Update(void)
 
 		break;
 
-	case STATE_TIME_WAIT:	// クリアタイム表示待機状態
+	case STATE_SCORE_WAIT:	// 花スコア表示待機状態
 
 		// 表示待機の更新
-		if (UpdateDrawWait(time::WAIT_CNT))
+		if (UpdateDrawWait(score::WAIT_CNT))
 		{ // 待機完了の場合
 
-			// クリアタイム表示の初期化
-			InitTime();
+			// 花スコア表示の初期化
+			InitScore();
 		}
 
 		break;
 
-	case STATE_TIME:	// クリアタイム表示状態
+	case STATE_SCORE:	// 花スコア表示状態
 
-		// クリアタイム表示の更新
-		UpdateTime();
+		// 花スコア表示の更新
+		UpdateScore();
 
 		break;
 
@@ -367,8 +357,8 @@ void CRankingManager::Update(void)
 	for (int nCntRank = 0; nCntRank < ranking::NUM_DISP; nCntRank++)
 	{ // ランキングの上位表示数分繰り返す
 
-		// クリアタイムの更新
-		m_apTime[nCntRank]->Update();
+		// 花スコアの更新
+		m_apScore[nCntRank]->Update();
 
 		// 順位表示の更新
 		m_apRank[nCntRank]->Update();
@@ -392,8 +382,8 @@ void CRankingManager::Set(const long nValue)
 	// 読込
 	Load();
 
-	if (nValue < m_aRanking[nLowestID])
-	{ // 最下位のクリアタイムより早いクリアタイムの場合
+	if (nValue > m_aRanking[nLowestID])
+	{ // 最下位のクリアタイムより花スコアが高い場合
 
 		// ソート
 		Sort(nValue);
@@ -577,7 +567,7 @@ void CRankingManager::UpdateRank(void)
 		colRank.a = rank::SET_COL.a;
 
 		// 状態を変更
-		m_state = STATE_TIME_WAIT;	// クリアタイム表示待機状態
+		m_state = STATE_SCORE_WAIT;	// 花スコア表示待機状態
 	}
 
 	for (int nCntRank = 0; nCntRank < ranking::NUM_DISP; nCntRank++)
@@ -602,21 +592,21 @@ void CRankingManager::RevisionRank(void)
 }
 
 //============================================================
-//	クリアタイム表示の初期化処理
+//	花スコア表示の初期化処理
 //============================================================
-void CRankingManager::InitTime(void)
+void CRankingManager::InitScore(void)
 {
 	if (m_nCounterDraw >= 0)
 	{ // 描画し終わっていない場合
 
 		// 自動描画をONに設定
-		m_apTime[m_nCounterDraw]->SetEnableDraw(true);
+		m_apScore[m_nCounterDraw]->SetEnableDraw(true);
 
-		// クリアタイム表示の拡大率を設定
-		m_fScale = time::SET_SCALE;
+		// 花スコア表示の拡大率を設定
+		m_fScale = score::SET_SCALE;
 
-		// クリアタイム表示状態にする
-		m_state = STATE_TIME;
+		// 花スコア表示状態にする
+		m_state = STATE_SCORE;
 	}
 	else
 	{ // 描画し終わった場合
@@ -630,28 +620,27 @@ void CRankingManager::InitTime(void)
 }
 
 //============================================================
-//	クリアタイム表示の更新処理
+//	花スコア表示の更新処理
 //============================================================
-void CRankingManager::UpdateTime(void)
+void CRankingManager::UpdateScore(void)
 {
 	if (m_fScale < 1.0f)
 	{ // 拡大率が最小値より大きい場合
 
 		// 拡大率を加算
-		m_fScale += time::ADD_SCALE - ((time::MAX_SUB_SCALE) / (float)(ranking::NUM_DISP - 1)) * fabsf((float)m_nCounterDraw - (float)(ranking::NUM_DISP - 1));
+		m_fScale += score::ADD_SCALE - ((score::MAX_SUB_SCALE) / (float)(ranking::NUM_DISP - 1)) * fabsf((float)m_nCounterDraw - (float)(ranking::NUM_DISP - 1));
 
-		// クリアタイム表示の大きさを設定
-		m_apTime[m_nCounterDraw]->SetSizingValue(time::SIZE_VAL * m_fScale);
-		m_apTime[m_nCounterDraw]->SetSizingPart(time::SIZE_PART * m_fScale);
+		// 花スコア表示の大きさを設定
+		m_apScore[m_nCounterDraw]->SetVec3Sizing(score::SIZE_VAL * m_fScale);
 	}
 	else
 	{ // 拡大率が最小値以下の場合
 
-		// クリアタイム表示の補正
-		RevisionTime();
+		// 花スコア表示の補正
+		RevisionScore();
 
 		// 状態を変更
-		m_state = STATE_TIME_WAIT;	// クリアタイム表示待機状態
+		m_state = STATE_SCORE_WAIT;	// 花スコア表示待機状態
 
 		// サウンドの再生
 		PLAY_SOUND(CSound::LABEL_SE_DECISION_001);	// 決定音01
@@ -659,16 +648,15 @@ void CRankingManager::UpdateTime(void)
 }
 
 //============================================================
-//	クリアタイム表示の補正処理
+//	花スコア表示の補正処理
 //============================================================
-void CRankingManager::RevisionTime(void)
+void CRankingManager::RevisionScore(void)
 {
 	// 拡大率を初期化
 	m_fScale = 1.0f;
 
-	// クリアタイム表示の大きさを設定
-	m_apTime[m_nCounterDraw]->SetSizingValue(time::SIZE_VAL);
-	m_apTime[m_nCounterDraw]->SetSizingPart(time::SIZE_PART);
+	// 花スコア表示の大きさを設定
+	m_apScore[m_nCounterDraw]->SetVec3Sizing(score::SIZE_VAL);
 
 	// 描画カウンターを減算
 	m_nCounterDraw--;
@@ -681,7 +669,7 @@ void CRankingManager::UpdateTransition(void)
 {
 	// ポインタを宣言
 	CInputKeyboard	*pKeyboard	= GET_INPUTKEY;	// キーボード
-	CInputPad		*pPad		= GET_INPUTPAD;		// パッド
+	CInputPad		*pPad		= GET_INPUTPAD;	// パッド
 
 	if (pKeyboard->IsTrigger(DIK_RETURN)
 	||  pKeyboard->IsTrigger(DIK_SPACE)
@@ -732,16 +720,15 @@ void CRankingManager::SkipStaging(void)
 	InitRank();
 	RevisionRank();
 
-	// クリアタイム表示の初期化・補正
+	// 花スコア表示の初期化・補正
 	for (int nCntRank = 0; nCntRank < ranking::NUM_DISP; nCntRank++)
 	{ // ランキングの上位表示数分繰り返す
 
 		// 自動描画をONに設定
-		m_apTime[nCntRank]->SetEnableDraw(true);
+		m_apScore[nCntRank]->SetEnableDraw(true);
 
-		// クリアタイム表示の大きさを設定
-		m_apTime[nCntRank]->SetSizingValue(time::SIZE_VAL);
-		m_apTime[nCntRank]->SetSizingPart(time::SIZE_PART);
+		// 花スコア表示の大きさを設定
+		m_apScore[nCntRank]->SetVec3Sizing(score::SIZE_PART);
 	}
 
 	// 状態を変更
@@ -776,11 +763,11 @@ bool CRankingManager::UpdateDrawWait(const int nWait)
 //============================================================
 //	ソート処理
 //============================================================
-void CRankingManager::Sort(const long nValue)
+void CRankingManager::Sort(const int nValue)
 {
 	// 変数を宣言
 	long nKeepNum;		// ソート用
-	int	nCurrentMinID;	// 最小値のインデックス
+	int	nCurrentMinID;	// 最大値のインデックス
 
 	// 現在の最下位の情報と書き換え
 	m_aRanking[ranking::NUM_DISP - 1] = nValue;
@@ -794,16 +781,16 @@ void CRankingManager::Sort(const long nValue)
 		for (int nCntSort = nCntKeep + 1; nCntSort < ranking::NUM_DISP; nCntSort++)
 		{ // 入れ替える値の総数 -nCntKeep分繰り返す
 
-			if (m_aRanking[nCurrentMinID] > m_aRanking[nCntSort])	
-			{ // 最小値に設定されている値より、現在の値のほうが小さい場合
+			if (m_aRanking[nCurrentMinID] < m_aRanking[nCntSort])	
+			{ // 最大値に設定されている値より、現在の値のほうが大きい場合
 
-				// 現在の要素番号を最小値に設定
+				// 現在の要素番号を最大値に設定
 				nCurrentMinID = nCntSort;
 			}
 		}
 
 		if (nCntKeep != nCurrentMinID)
-		{ // 最小値の要素番号に変動があった場合
+		{ // 最大値の要素番号に変動があった場合
 
 			// 要素の入れ替え
 			nKeepNum					= m_aRanking[nCntKeep];
@@ -816,7 +803,7 @@ void CRankingManager::Sort(const long nValue)
 //============================================================
 //	スコア変動インデックスの設定処理
 //============================================================
-void CRankingManager::SetNewRank(const long nValue)
+void CRankingManager::SetNewRank(const int nValue)
 {
 	for (int nCntRank = 0; nCntRank < ranking::NUM_DISP; nCntRank++)
 	{ // ランキングの上位表示数分繰り返す
@@ -890,14 +877,11 @@ void CRankingManager::Load(void)
 		if (pFile != nullptr)
 		{ // ファイルが開けた場合
 
-			// 変数配列を宣言
-			long nMaxTime = CTimerManager::GetMaxTime();	// 最大タイム
-
 			for (int nCntRank = 0; nCntRank < ranking::NUM_DISP; nCntRank++)
 			{ // ランキングの上位表示数分繰り返す
 
 				// ランキング情報をクリア
-				m_aRanking[nCntRank] = nMaxTime;
+				m_aRanking[nCntRank] = 0;
 			}
 
 			// ファイルに数値を書き出す
