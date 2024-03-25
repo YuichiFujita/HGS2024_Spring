@@ -503,6 +503,37 @@ void CParticle3D::Fire(const D3DXVECTOR3& rPos)
 	float		fRadius = 0.0f;		// 半径の代入用
 	float		fSubRad = 0.0f;		// 半径減算量の代入用
 
+	for (int i = 0; i < 2; i++)
+	{
+		// 位置をランダムに設定
+		float fRotX = useful::RandomRot();	// ランダム仰角
+		float fRotY = useful::RandomRot();	// ランダム方位角
+		pos.x = rPos.x + fire::POSGAP * sinf(fRotX) * sinf(fRotY);
+		pos.y = rPos.y + fire::POSGAP * cosf(fRotX);
+		pos.z = rPos.z + fire::POSGAP * sinf(fRotX) * cosf(fRotY);
+
+		// 向きを設定
+		rot.z = useful::RandomRot();
+
+		// 半径を設定
+		fRadius = fire::INIT_RAD + (float)(rand() % fire::DIV_RAD_RAND - fire::SUB_RAD_RAND) + 38.0f;
+
+		// エフェクト3Dオブジェクトの生成
+		CEffect3D::Create
+		( // 引数
+			pos,						// 位置
+			fRadius,					// 半径
+			CEffect3D::TYPE_SMOKE,		// テクスチャ
+			fire::EFF_LIFE,				// 寿命
+			VEC3_ZERO,					// 移動量
+			rot,						// 向き
+			fire::COL,					// 色
+			0.0f,						// 半径の減算量
+			CRenderState::BLEND_NORMAL,	// 加算合成状況
+			LABEL_PARTICLE				// オブジェクトラベル
+		);
+	}
+
 	for (int nCntPart = 0; nCntPart < fire::SPAWN; nCntPart++)
 	{ // 生成されるエフェクト数分繰り返す
 

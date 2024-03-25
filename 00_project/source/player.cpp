@@ -110,7 +110,7 @@ void CPlayer::Update(void)
 void CPlayer::Draw(CShader* pShader)
 {
 	// オブジェクトモデルの描画
-	CObjectModel::Draw(pShader);
+	CObjectModel::Draw(CToonShader::GetInstance());
 }
 
 //============================================================
