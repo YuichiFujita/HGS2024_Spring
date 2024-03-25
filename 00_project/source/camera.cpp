@@ -67,9 +67,9 @@ namespace
 	// 固定カメラ情報
 	namespace fixed
 	{
-		const float	 INIT_DIS = 650.0f;	// 追従カメラの距離
-		const D3DXVECTOR3 INIT_ROT  = D3DXVECTOR3(1.3f, 0.0f, 0.0f);	// 追従カメラの向き初期値
-		const D3DXVECTOR3 INIT_POSR = D3DXVECTOR3(0.0f, 300.0f, 0.0f);	// 追従カメラの注視点初期値
+		const float	 INIT_DIS = 950.0f;	// 追従カメラの距離
+		const D3DXVECTOR3 INIT_ROT  = D3DXVECTOR3(1.35f, 0.0f, 0.0f);	// 追従カメラの向き初期値
+		const D3DXVECTOR3 INIT_POSR = D3DXVECTOR3(0.0f, 420.0f, 0.0f);	// 追従カメラの注視点初期値
 
 	}
 
