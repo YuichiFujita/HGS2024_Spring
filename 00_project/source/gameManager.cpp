@@ -27,6 +27,7 @@
 #include "collision.h"
 #include "stage.h"
 #include "multiValue.h"
+#include "pause.h"
 
 //************************************************************
 //	定数宣言
@@ -119,8 +120,11 @@ void CGameManager::Update(void)
 		break;
 
 	case STATE_NORMAL:
-		SpownManager();
-		CSceneGame::GetScoreUI()->SetNum(CFlower::GetList()->GetNumAll());
+		if (!CSceneGame::GetPause()->IsPause())
+		{
+			SpownManager();
+			CSceneGame::GetScoreUI()->SetNum(CFlower::GetList()->GetNumAll());
+		}
 		break;
 
 	default:	// 例外処理
@@ -135,6 +139,9 @@ void CGameManager::Update(void)
 void CGameManager::SetBurn(void)
 {
 	if (m_state != STATE_NORMAL) { return; }
+
+	// タイマー計測終了
+	CSceneGame::GetTimerUI()->End();
 
 	// カメラ揺れを設定
 	GET_MANAGER->GetCamera()->SetSwing(CCamera::TYPE_MAIN, CCamera::SSwing(10.0f, 1.5f, 0.3f));

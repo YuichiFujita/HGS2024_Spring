@@ -183,6 +183,9 @@ HRESULT CSceneGame::Init(void)
 	// BGMの再生
 	PLAY_SOUND(CSound::LABEL_BGM_GAME);
 
+	// タイマー計測開始
+	m_pTimerUI->Start();
+
 	// 成功を返す
 	return S_OK;
 }
