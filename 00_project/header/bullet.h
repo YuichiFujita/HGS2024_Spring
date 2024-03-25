@@ -1,20 +1,20 @@
 //============================================================
 //
-//	花ヘッダー [flower.h]
-//	Author：藤田勇一
+//	弾ヘッダー [bullet.h]
+//	Author：佐久間優香
 //
 //============================================================
 //************************************************************
 //	二重インクルード防止
 //************************************************************
-#ifndef _FLOWER_H_
-#define _FLOWER_H_
+#ifndef _BULLET_H_
+#define _BULLET_H_
 
 //************************************************************
 //	インクルードファイル
 //************************************************************
 #include "main.h"
-#include "object3D.h"
+#include "effect3D.h"
 
 //************************************************************
 //	前方宣言
@@ -25,7 +25,7 @@ class CShadow;	// 影クラス
 //	クラス定義
 //************************************************************
 // 花クラス
-class CFlower : public CObject3D
+class CBullet : public CEffect3D
 {
 public:
 	enum EState
@@ -36,10 +36,10 @@ public:
 	};
 
 	// コンストラクタ
-	CFlower();
+	CBullet();
 
 	// デストラクタ
-	~CFlower();
+	~CBullet();
 
 	// オーバーライド関数
 	HRESULT Init(void) override;	// 初期化
@@ -48,14 +48,10 @@ public:
 	void Draw(CShader *pShader = nullptr) override;	// 描画
 
 	// 静的メンバ関数
-	static CFlower *Create(const D3DXVECTOR3& rPos, const D3DXVECTOR3& rRot);	// 生成
-	static void RandomSpawn(const int nNum);	// ランダム生成
-	static int GetNumAll(void);	// 総数取得
+	static CBullet *Create(const D3DXVECTOR3& rPos, const D3DXVECTOR3& rRot);	// 生成
+	//static void RandomSpawn(const int nNum);	// ランダム生成
 
 private:
-	// 静的メンバ変数
-	static int m_nNumAll;	// 花の総数
-
 	// メンバ変数
 	CShadow *m_pShadow;	// 影の情報
 	EState m_state;		// 状態

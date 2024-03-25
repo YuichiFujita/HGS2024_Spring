@@ -169,8 +169,8 @@ HRESULT CSceneGame::Init(void)
 	//	初期設定
 	//--------------------------------------------------------
 	// カメラを設定
-	GET_MANAGER->GetCamera()->SetState(CCamera::STATE_FOLLOW);	// カメラを追従状態に設定
-	GET_MANAGER->GetCamera()->SetDestFollow();					// 目標位置を設定
+	GET_MANAGER->GetCamera()->SetState(CCamera::STATE_FIXED);	// カメラを固定状態に設定
+	GET_MANAGER->GetCamera()->SetDestFixed();					// 目標位置を設定
 
 	// 花をはやす
 	CFlower::RandomSpawn(20);

@@ -1,13 +1,14 @@
+#if 0
 //============================================================
 //
-//	花処理 [flower.cpp]
-//	Author：藤田勇一
+//	弾処理 [bullet.cpp]
+//	Author：佐久間優香
 //
 //============================================================
 //************************************************************
 //	インクルードファイル
 //************************************************************
-#include "flower.h"
+#include "bullet.h"
 #include "manager.h"
 #include "scene.h"
 #include "sceneGame.h"
@@ -27,8 +28,6 @@
 //************************************************************
 namespace
 {
-	const char *TEXTURE_FILE = "data\\TEXTURE\\flower000.png";	// 花テクスチャファイル
-
 	const int		  PRIORITY		= 2;	// 花の優先順位
 	const D3DXVECTOR3 SIZE_FLOWER	= D3DXVECTOR3(50.0f, 50.0f, 0.0f);	// 半径
 
@@ -38,10 +37,6 @@ namespace
 	const float SPAWN_ALPHA	= 0.65f;	// 花の生成時透明度
 	const float GLOW_SPEED	= 2.0f;		// 花の生える速度
 }
-//************************************************************
-//	定数宣言
-//************************************************************
-int CFlower::m_nNumAll = 0;	// 花の総数
 
 //************************************************************
 //	子クラス [CFlower] のメンバ関数
@@ -49,25 +44,25 @@ int CFlower::m_nNumAll = 0;	// 花の総数
 //============================================================
 //	コンストラクタ
 //============================================================
-CFlower::CFlower() : CObject3D(CObject::LABEL_FLOWER, CObject::DIM_3D, PRIORITY),
+CBullet::CBullet() : CEffect3D(CEffect3D::TYPE_BUBBLE, CObject::LABEL_EFFECT),
 	m_pShadow	(nullptr),		// 影の情報
 	m_state		(EState::NONE)	// 状態
 {
-	m_nNumAll++;
+
 }
 
 //============================================================
 //	デストラクタ
 //============================================================
-CFlower::~CFlower()
+CBullet::~CBullet()
 {
-	m_nNumAll--;
+
 }
 
 //============================================================
 //	初期化処理
 //============================================================
-HRESULT CFlower::Init(void)
+HRESULT CBullet::Init(void)
 {
 	// メンバ変数を初期化
 	m_pShadow = nullptr;		// 影の情報
@@ -92,8 +87,7 @@ HRESULT CFlower::Init(void)
 		return E_FAIL;
 	}
 
-	// テクスチャを割当
-	BindTexture(TEXTURE_FILE);
+	SetPriority(2);
 
 	// 原点を設定
 	SetOrigin(ORIGIN_DOWN);
@@ -132,7 +126,7 @@ HRESULT CFlower::Init(void)
 //============================================================
 //	終了処理
 //============================================================
-void CFlower::Uninit(void)
+void CBullet::Uninit(void)
 {
 	// 影を破棄
 	m_pShadow->Uninit();
@@ -144,7 +138,7 @@ void CFlower::Uninit(void)
 //============================================================
 //	更新処理
 //============================================================
-void CFlower::Update(void)
+void CBullet::Update(void)
 {
 	// 変数を宣言
 	D3DXVECTOR3 pos = GetVec3Position();	// 位置
@@ -152,14 +146,14 @@ void CFlower::Update(void)
 
 	switch (m_state)
 	{ // 状態ごとの処理
-	case CFlower::NONE:
+	case CBullet::NONE:
 
 		// 高さを地面に設定
 		pos.y = fLand;
 
 		break;
 
-	case CFlower::SPAWN:
+	case CBullet::SPAWN:
 
 		// 地面からはやす
 		pos.y += GLOW_SPEED;
@@ -197,7 +191,7 @@ void CFlower::Update(void)
 //============================================================
 //	描画処理
 //============================================================
-void CFlower::Draw(CShader *pShader)
+void CBullet::Draw(CShader *pShader)
 {
 	// オブジェクト3Dの描画
 	CObject3D::Draw(pShader);
@@ -206,7 +200,7 @@ void CFlower::Draw(CShader *pShader)
 //============================================================
 //	生成処理
 //============================================================
-CFlower *CFlower::Create
+CBullet* CBullet::Create
 (
 	const D3DXVECTOR3& rPos,	// 位置
 	const D3DXVECTOR3& rRot		// 向き
@@ -216,8 +210,8 @@ CFlower *CFlower::Create
 	D3DXVECTOR3 pos = rPos;	// 座標設定用
 
 	// 花の生成
-	CFlower *pFlower = new CFlower;
-	if (pFlower == nullptr)
+	CBullet*pBullet = new CBullet;
+	if (pBullet == nullptr)
 	{ // 生成に失敗した場合
 
 		return nullptr;
@@ -226,67 +220,60 @@ CFlower *CFlower::Create
 	{ // 生成に成功した場合
 
 		// 花の初期化
-		if (FAILED(pFlower->Init()))
+		if (FAILED(pBullet->Init()))
 		{ // 初期化に失敗した場合
 
 			// 花の破棄
-			SAFE_DELETE(pFlower);
+			SAFE_DELETE(pBullet);
 			return nullptr;
 		}
 
 		// 位置を設定
 		pos.y  = CScene::GetStage()->GetFieldPositionHeight(pos);	// 高さを地面に設定
 		pos.y -= SIZE_FLOWER.y;	// 地面に埋める
-		pFlower->SetVec3Position(pos);
+		pBullet->SetVec3Position(pos);
 
 		// 向きを設定
-		pFlower->SetVec3Rotation(rRot);
+		pBullet->SetVec3Rotation(rRot);
 
 		// 影の描画情報を設定
-		pFlower->m_pShadow->SetDrawInfo();
+		pBullet->m_pShadow->SetDrawInfo();
 
 		// 確保したアドレスを返す
-		return pFlower;
+		return pBullet;
 	}
 }
 
-//============================================================
-//	ランダム生成処理
-//============================================================
-void CFlower::RandomSpawn(const int nNum)
-{
-	CPlayer *pPlayer = CScene::GetPlayer();					// プレイヤー情報
-	CStage *pStage = CScene::GetStage();					// ステージ情報
-	CStage::SStageLimit limit = pStage->GetStageLimit();	// ステージ範囲
-	int nLimit = (int)limit.fRadius;		// ステージ半径
-	D3DXVECTOR3 posTarget = limit.center;	// 中心座標
-	D3DXVECTOR3 posSet;	// 位置設定用
-	D3DXVECTOR3 rotSet;	// 向き設定用
-
-	for (int nCntGrow = 0; nCntGrow < nNum; nCntGrow++)
-	{ // 生成数分繰り返す
-
-		// 生成位置を設定
-		posSet.x = (float)(rand() % (nLimit * 2) - nLimit + 1);
-		posSet.y = 0.0f;
-		posSet.z = (float)(rand() % (nLimit * 2) - nLimit + 1);
-
-		// 生成位置を補正
-		collision::CirclePillar(posSet, posTarget, SIZE_FLOWER.x, pPlayer->GetRadius());	// ターゲット内部の生成防止
-		CScene::GetStage()->LimitPosition(posSet, SIZE_FLOWER.x);	// ステージ範囲外の生成防止
-
-		// 生成向きを設定
-		rotSet = D3DXVECTOR3(0.0f, atan2f(posSet.x - posTarget.x, posSet.z - posTarget.z), 0.0f);
-
-		// 花オブジェクトの生成
-		CFlower::Create(posSet, rotSet);
-	}
-}
-
-//============================================================
-//	総数取得処理
-//============================================================
-int CFlower::GetNumAll(void)
-{
-	return m_nNumAll;
-}
+////============================================================
+////	ランダム生成処理
+////============================================================
+//void CBullet::RandomSpawn(const int nNum)
+//{
+//	CPlayer *pPlayer = CScene::GetPlayer();					// プレイヤー情報
+//	CStage *pStage = CScene::GetStage();					// ステージ情報
+//	CStage::SStageLimit limit = pStage->GetStageLimit();	// ステージ範囲
+//	int nLimit = (int)limit.fRadius;		// ステージ半径
+//	D3DXVECTOR3 posTarget = limit.center;	// 中心座標
+//	D3DXVECTOR3 posSet;	// 位置設定用
+//	D3DXVECTOR3 rotSet;	// 向き設定用
+//
+//	for (int nCntGrow = 0; nCntGrow < nNum; nCntGrow++)
+//	{ // 生成数分繰り返す
+//
+//		// 生成位置を設定
+//		posSet.x = (float)(rand() % (nLimit * 2) - nLimit + 1);
+//		posSet.y = 0.0f;
+//		posSet.z = (float)(rand() % (nLimit * 2) - nLimit + 1);
+//
+//		// 生成位置を補正
+//		collision::CirclePillar(posSet, posTarget, SIZE_FLOWER.x, /*pPlayer->GetRadius()*/ 10.0f);	// ターゲット内部の生成防止
+//		CScene::GetStage()->LimitPosition(posSet, SIZE_FLOWER.x);	// ステージ範囲外の生成防止
+//
+//		// 生成向きを設定
+//		rotSet = D3DXVECTOR3(0.0f, atan2f(posSet.x - posTarget.x, posSet.z - posTarget.z), 0.0f);
+//
+//		// 花オブジェクトの生成
+//		CBullet::Create(posSet, rotSet);
+//	}
+//}
+#endif
