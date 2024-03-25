@@ -26,6 +26,7 @@
 #include "flower.h"
 #include "collision.h"
 #include "stage.h"
+#include "multiValue.h"
 
 //************************************************************
 //	定数宣言
@@ -74,6 +75,9 @@ HRESULT CGameManager::Init(void)
 	//生成カウントを初期化
 	SpownCount = 0;
 
+	// 花生成カウント
+	nFlowerCount = 0;
+
 	// 中心からの燃え広がり量
 	m_fMoveBurn = 0.0f;
 
@@ -116,6 +120,16 @@ void CGameManager::Update(void)
 
 	case STATE_NORMAL:
 		SpownManager();
+		CSceneGame::GetScoreUI()->SetNum(CFlower::GetList()->GetNumAll() * 2);
+
+		// 花生成カウント
+		nFlowerCount++;
+		if (nFlowerCount % 60 == 0)
+		{
+			nFlowerCount = 0;
+			CFlower::RandomSpawn(2);
+		}
+
 		break;
 
 	default:	// 例外処理
