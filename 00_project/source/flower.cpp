@@ -324,7 +324,6 @@ CListManager<CFlower> *CFlower::GetList(void)
 //============================================================
 void CFlower::RandomSpawn(const int nNum)
 {
-	CPlayer *pPlayer = CScene::GetPlayer();					// プレイヤー情報
 	CStage *pStage = CScene::GetStage();					// ステージ情報
 	CStage::SStageLimit limit = pStage->GetStageLimit();	// ステージ範囲
 	int nLimit = (int)limit.fRadius;		// ステージ半径
@@ -341,7 +340,7 @@ void CFlower::RandomSpawn(const int nNum)
 		posSet.z = (float)(rand() % (nLimit * 2) - nLimit + 1);
 
 		// 生成位置を補正
-		collision::CirclePillar(posSet, posTarget, SIZE_FLOWER.x, pPlayer->GetRadius());	// ターゲット内部の生成防止
+		collision::CirclePillar(posSet, posTarget, SIZE_FLOWER.x, 10.0f);	// ターゲット内部の生成防止
 		CScene::GetStage()->LimitPosition(posSet, SIZE_FLOWER.x);	// ステージ範囲外の生成防止
 
 		// 生成向きを設定

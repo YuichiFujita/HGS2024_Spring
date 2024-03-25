@@ -215,6 +215,7 @@ void CPlayer::UpdateShot()
 //============================================================
 CPlayer* CPlayer::Create
 ( // 引数
+	const CScene::EMode mode,	// モード
 	const EType type,			// 種類
 	const D3DXVECTOR3& rPos,	// 位置
 	const D3DXVECTOR3& rRot,	// 向き
@@ -222,7 +223,17 @@ CPlayer* CPlayer::Create
 )
 {
 	// モデル文字の生成
-	CPlayer* pModelFont = new CPlayer;
+	CPlayer* pModelFont = nullptr;
+
+	switch (mode)
+	{
+	case CScene::MODE_GAME:
+		pModelFont = new CPlayer;
+		break;
+	default:
+		break;
+	}
+
 	if (pModelFont == nullptr)
 	{ // 生成に失敗した場合
 

@@ -37,7 +37,7 @@ namespace
 	// フェード基本情報
 	namespace fade
 	{
-		const D3DXVECTOR3	SIZE	= D3DXVECTOR3(SCREEN_SIZE.x * 0.7f, SCREEN_SIZE.y * 0.95f, 0.0f);	// フェードの大きさ
+		const D3DXVECTOR3	SIZE	= D3DXVECTOR3(SCREEN_SIZE.x * 0.55f, SCREEN_SIZE.y * 0.95f, 0.0f);	// フェードの大きさ
 		const D3DXCOLOR		SET_COL	= D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.6f);	// α値の停止値
 
 		const D3DXCOLOR		INIT_COL	= XCOL_AWHITE;	// α値の初期値
@@ -48,7 +48,7 @@ namespace
 	namespace logo
 	{
 		const D3DXVECTOR3 POS	= D3DXVECTOR3(SCREEN_CENT.x, 115.0f, 0.0f);	// ランキングロゴ表示の位置
-		const D3DXVECTOR3 SIZE	= D3DXVECTOR3(473.0f, 199.0f, 0.0f);		// ランキングロゴ表示の大きさ
+		const D3DXVECTOR3 SIZE	= D3DXVECTOR3(473.0f * 0.9f, 199.0f * 0.9f, 0.0f);		// ランキングロゴ表示の大きさ
 		const float SET_SCALE	= 15.0f;	// ランキングロゴ表示の初期拡大率
 		const float SUB_SCALE	= 0.65f;	// ランキングロゴ表示の拡大率減算量
 	}
@@ -56,7 +56,7 @@ namespace
 	// 順位基本情報
 	namespace rank
 	{
-		const D3DXVECTOR3	POS		= D3DXVECTOR3(310.0f, 250.0f, 0.0f);	// 順位表示の位置
+		const D3DXVECTOR3	POS		= D3DXVECTOR3(480.0f, 250.0f, 0.0f);	// 順位表示の位置
 		const D3DXVECTOR3	SIZE	= D3DXVECTOR3(183.0f, 108.0f, 0.0f);	// 順位表示の大きさ
 		const D3DXVECTOR3	SPACE	= D3DXVECTOR3(0.0f, 100.0f, 0.0f);		// 順位表示の空白
 
@@ -69,7 +69,7 @@ namespace
 	// 花スコア基本情報
 	namespace score
 	{
-		const D3DXVECTOR3 POS			= D3DXVECTOR3(485.0f, 250.0f, 0.0f);	// クリアタイム表示の位置
+		const D3DXVECTOR3 POS			= D3DXVECTOR3(675.0f, 250.0f, 0.0f);	// クリアタイム表示の位置
 		const D3DXVECTOR3 SPACE			= D3DXVECTOR3(0.0f, 100.0f, 0.0f);		// クリアタイム表示の空白
 		const D3DXVECTOR3 SIZE_VAL		= D3DXVECTOR3(88.0f, 105.0f, 0.0f);		// クリアタイム表示の数字大きさ
 		const D3DXVECTOR3 SIZE_PART		= D3DXVECTOR3(45.0f, 105.0f, 0.0f);		// クリアタイム表示の区切り大きさ
@@ -728,7 +728,7 @@ void CRankingManager::SkipStaging(void)
 		m_apScore[nCntRank]->SetEnableDraw(true);
 
 		// 花スコア表示の大きさを設定
-		m_apScore[nCntRank]->SetVec3Sizing(score::SIZE_PART);
+		m_apScore[nCntRank]->SetVec3Sizing(score::SIZE_VAL);
 	}
 
 	// 状態を変更

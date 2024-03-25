@@ -14,6 +14,7 @@
 //	インクルードファイル
 //************************************************************
 #include "objectModel.h"
+#include "scene.h"
 
 //************************************************************
 //	クラス定義
@@ -49,6 +50,7 @@ public:
 	// 静的メンバ関数
 	static CPlayer* Create	// 生成
 	( // 引数
+		const CScene::EMode mode,				// モード
 		const EType type,						// 種類
 		const D3DXVECTOR3& rPos,				// 位置
 		const D3DXVECTOR3& rRot = VEC3_ZERO,	// 向き
